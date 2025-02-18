@@ -4,9 +4,48 @@ import json
 import requests
 from flask import Flask, request, send_file, jsonify
 from werkzeug.utils import secure_filename
+from openai import OpenAI
 
 # Creates a Flask application
 app = Flask(__name__)
+
+client = OpenAI()
+OPENAI_API_KEY="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"
+
+# ============================================
+# Function to create a message in a thread
+def create_message(client, thread_id, content):
+    return client.beta.threads.messages.create(
+        thread_id=thread_id,
+        role="user",
+        content=content
+    )
+
+# ============================================
+# Function to create an assistant
+def create_assistant(client, name, instructions, tools, model):
+    return client.beta.assistants.create(
+        name=name,
+        instructions=instructions,
+        tools=tools,
+        model=model
+    )
+
+# ============================================
+# Function to create a thread
+def create_thread(client):
+    return client.beta.threads.create()
+
+# ============================================
+# Function to create and poll a run
+def create_and_poll_run(client, thread_id, assistant_id, instructions):
+    return client.beta.threads.runs.create_and_poll(
+        thread_id=thread_id,
+        assistant_id=assistant_id,
+        instructions=instructions
+    )
+
+
 
 # ============================================
 # Synchronous Deepseek API Call
@@ -23,7 +62,7 @@ def deepseek_generate(prompt, page_text):
         "stream": False
     }
 
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url, json=payload, headers=headers, verify=True)
     response_json = response.json()
     return response_json.get("choices", [{}])[0].get("message", {}).get("content", "")
 
@@ -105,38 +144,6 @@ def generate_anki_import_file(flashcards, filename="anki_import.txt"):
 
     return filename
 
-# ============================================
-# Flask Endpoint
-# ============================================
-# @app.route('/upload', methods=['POST'])
-# def upload_pdf():
-#     if 'pdf' not in request.files:
-#         return jsonify({'error': 'No PDF file provided'}), 400
-
-#     file = request.files['pdf']
-#     if file.filename == '':
-#         return jsonify({'error': 'No selected file'}), 400
-
-#     filename = secure_filename(file.filename)
-#     file.save(filename)
-
-#     try:
-#         nested_flashcards = process_pdf_to_flashcards(filename)
-#         flat_flashcards = flatten_flashcards(nested_flashcards)
-#         output_file = generate_anki_import_file(flat_flashcards)
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
-#     finally:
-#         os.remove(filename)
-
-#     return send_file(output_file, as_attachment=True)
-
-# # ============================================
-# # Run Flask App
-# # ============================================
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
 def test_local_pdf_processing(pdf_filename):
     """
     Test function to process a local PDF in the same directory
@@ -152,12 +159,33 @@ def test_local_pdf_processing(pdf_filename):
         nested_flashcards = process_pdf_to_flashcards(pdf_filename)
         if nested_flashcards is None:
             raise ValueError("process_pdf_to_flashcards returned None")
-        flat_flashcards = flatten_flashcards(nested_flashcards)
-        output_file = generate_anki_import_file(flat_flashcards)
-        print(f"✅ Flashcards successfully generated and saved to: {output_file}")
+        # flat_flashcards = flatten_flashcards(nested_flashcards)
+        # output_file = generate_anki_import_file(flat_flashcards)
+        # print(f"✅ Flashcards successfully generated and saved to: {output_file}")
     except Exception as e:
         print(f"❌ Error occurred: {e}")
 
 # Example usage:
 if __name__ == "__main__":
-    test_local_pdf_processing("TFile3.pdf")  # Change filename as needed
+    # test_local_pdf_processing("TFile3.pdf")  # Change filename as needed
+    
+    # Test OpenAI Assistants API
+    client = OpenAI()
+    test_Assistant = create_assistant(client, "Flashcard Reviewer Agent", "You're an expert flashcard reviewing agent", [], "gpt-4o")
+    #print(test_Assistant)
+    
+    test_Thread = create_thread(client)
+    # print(test_Thread)
+
+    test_Message = create_message(client, test_Thread.id, "Hello, review the following card. Front: What is the course code for Database Management Systems? Back: CS 631")
+    # print(test_Message)
+
+    test_Run = create_and_poll_run(client, test_Thread.id, test_Assistant.id, "Review the flashcard")
+    # print(test_Run)
+
+    # List all messages in the thread
+    messages = client.beta.threads.messages.list(thread_id=test_Thread.id)
+    for msg in messages.data:
+        print(msg.content)
+
+
