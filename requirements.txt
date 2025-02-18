@@ -1,0 +1,5 @@
+pdfplumber
+openai
+os
+json
+flask
