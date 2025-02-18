@@ -3,3 +3,4 @@ openai
 os
 json
 flask
+requests

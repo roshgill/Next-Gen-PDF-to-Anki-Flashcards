@@ -1,8 +1,7 @@
 import os
 import pdfplumber
 import json
-import asyncio
-import aiohttp
+import requests
 from flask import Flask, request, send_file, jsonify
 from werkzeug.utils import secure_filename
 
@@ -10,9 +9,9 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # ============================================
-# Async Deepseek API Call
+# Synchronous Deepseek API Call
 # ============================================
-async def deepseek_generate(session, prompt, page_text):
+def deepseek_generate(prompt, page_text):
     url = "https://api.deepseek.com/chat/completions"
     headers = {"Authorization": f"Bearer sk-14060f17abef4c32ac3c9a4dc602b760"}
     payload = {
@@ -24,9 +23,9 @@ async def deepseek_generate(session, prompt, page_text):
         "stream": False
     }
 
-    async with session.post(url, json=payload, headers=headers) as response:
-        response_json = await response.json()
-        return response_json.get("choices", [{}])[0].get("message", {}).get("content", "")
+    response = requests.post(url, json=payload, headers=headers)
+    response_json = response.json()
+    return response_json.get("choices", [{}])[0].get("message", {}).get("content", "")
 
 # ============================================
 def clean_json_response(response_str):
@@ -36,10 +35,10 @@ def clean_json_response(response_str):
     return "\n".join(cleaned_lines)
 
 # ============================================
-# Asynchronous Flashcard Generation
+# Synchronous Flashcard Generation
 # ============================================
-async def generate_flashcards_for_page(session, page_number, page_text):
-    """Asynchronously generates flashcards for a given page's text."""
+def generate_flashcards_for_page(page_number, page_text):
+    """Generates flashcards for a given page's text."""
     if not page_text.strip():
         return []
 
@@ -53,8 +52,9 @@ For each key point, create a flashcard with the following structure:
 Your output must be in pure JSON format: a JSON array of objects, where each object has exactly two keys: "front" and "back".  
 If there is no important information to review on the page, simply output an empty JSON array ([]).
 """
-    response_json_str = await deepseek_generate(session, prompt, page_text)
+    response_json_str = deepseek_generate(prompt, page_text)
     cleaned_response = clean_json_response(response_json_str)
+    print(cleaned_response)
 
     try:
         flashcards = json.loads(cleaned_response)
@@ -75,17 +75,19 @@ def extract_pages_from_pdf(pdf_path):
     return pages
 
 # ============================================
-# Async Processing Function
+# Synchronous Processing Function
 # ============================================
-async def process_pdf_to_flashcards(pdf_path):
-    """Processes the PDF asynchronously, making concurrent API calls."""
+def process_pdf_to_flashcards(pdf_path):
+    """Processes the PDF, making synchronous API calls."""
     pages = extract_pages_from_pdf(pdf_path)
+    all_flashcards = []
 
-    async with aiohttp.ClientSession() as session:
-        tasks = [generate_flashcards_for_page(session, page_number, page_text) for page_number, page_text in pages]
-        results = await asyncio.gather(*tasks)
-
-    return results
+    for page_number, page_text in pages:
+        if page_text and page_text.strip():
+            flashcards = generate_flashcards_for_page(page_number, page_text)
+            all_flashcards.append(flashcards)
+    
+    return all_flashcards
 
 def flatten_flashcards(nested_flashcards):
     """Flattens a nested list of flashcards into a single list."""
@@ -119,7 +121,7 @@ def generate_anki_import_file(flashcards, filename="anki_import.txt"):
 #     file.save(filename)
 
 #     try:
-#         nested_flashcards = asyncio.run(process_pdf_to_flashcards(filename))
+#         nested_flashcards = process_pdf_to_flashcards(filename)
 #         flat_flashcards = flatten_flashcards(nested_flashcards)
 #         output_file = generate_anki_import_file(flat_flashcards)
 #     except Exception as e:
@@ -147,7 +149,7 @@ def test_local_pdf_processing(pdf_filename):
     print(f"Processing '{pdf_filename}'...\n")
 
     try:
-        nested_flashcards = asyncio.run(process_pdf_to_flashcards(pdf_filename))
+        nested_flashcards = process_pdf_to_flashcards(pdf_filename)
         if nested_flashcards is None:
             raise ValueError("process_pdf_to_flashcards returned None")
         flat_flashcards = flatten_flashcards(nested_flashcards)
@@ -158,4 +160,4 @@ def test_local_pdf_processing(pdf_filename):
 
 # Example usage:
 if __name__ == "__main__":
-    test_local_pdf_processing("TFile1.pdf")  # Change filename as needed
+    test_local_pdf_processing("TFile3.pdf")  # Change filename as needed

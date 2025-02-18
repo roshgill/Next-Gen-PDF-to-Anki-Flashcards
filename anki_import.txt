@@ -2,3 +2,37 @@
 #html:true
 #notetype column:1
 
+Basic	What is the course code for Database Management Systems?	CMPSC 431W
+Basic	What is the main topic covered in the course CMPSC 431W?	Database Management Systems
+Basic	What is the focus of the section titled 'Conceptual Database Design'?	Conceptual Database Design
+Basic	Which model is used in Conceptual Database Design?	ER Model (Entity-Relationship Model)
+Basic	Who are the contributors to the slides for this course?	Jiannan Wang@SFU and Dan Suciu@UW
+Basic	What is a database?	A database is a collection of data designed to support applications.
+Basic	What is the Relational Model?	The Relational Model is a common data model used by Database Management Systems (DBMS).
+Basic	What are Relational Algebra and Relational Calculus?	Relational Algebra and Relational Calculus are formal query languages used in database systems.
+Basic	What is SQL?	SQL (Structured Query Language) is a concrete way (Domain-Specific Language) to communicate with a Database Management System (DBMS).
+Basic	What is the primary question when designing a database for an application?	The primary question is: How do we design the database to support the given application?
+Basic	What are the key questions to consider when designing a database?	1. How to figure out the database design? 2. What tables to create? 3. Which attributes should be added to each table? 4. What are the relationships between tables? 5. What constraints do tables have to follow?
+Basic	What is the first step in database design?	Figuring out the overall database design.
+Basic	What is a critical consideration when creating tables in a database?	Determining which attributes should be added to each table.
+Basic	Why is it important to define relationships between tables in a database?	To ensure data integrity and enable efficient querying and data retrieval.
+Basic	What role do constraints play in database tables?	Constraints enforce rules on the data, ensuring accuracy and reliability.
+Basic	Why is database design important?	Database design is important because it ensures the database structure is agreed upon before implementation, avoids costly updates to the schema in production, and considers key issues like entities, relationships, and constraints.
+Basic	What is a key reason to agree on the database structure before implementation?	Agreeing on the database structure before implementation prevents expensive updates to the schema once the database is in production, as databases may operate for years.
+Basic	What are some key issues to consider during database design?	Key issues include deciding what entities to model, how entities are related, and what constraints exist in the domain.
+Basic	What formalisms can be used for database design?	Formalisms for database design include ER diagrams, UML, and other modeling tools.
+Basic	Why is updating the schema of a production database expensive?	Updating the schema of a production database is expensive because databases may be in operation for years, and changes can disrupt functionality and require significant resources.
+Basic	What is the first step in the database design process?	Requirement Analysis
+Basic	In which step of the database design process does the E/R Model fit in?	Conceptual Database Design
+Basic	What is the third step in the database design process?	Logical Database Design
+Basic	What is the fourth step in the database design process?	Schema Refinement
+Basic	What is the fifth step in the database design process?	Physical Database Design
+Basic	What is the final step in the database design process?	Application and Security Design
+Basic	What are the key questions to consider during Requirement Analysis?	1. What data is going to be stored? 2. What are we going to do with the data? 3. Who should access the data?
+Basic	Who is typically involved in Requirement Analysis?	Both technical and non-technical people.
+Basic	What is a common characteristic of Requirement Analysis?	It is usually very sloppy.
+Basic	What is a major challenge in Requirement Analysis?	The gap in understanding between stakeholders, which can be super tricky.
+Basic	What is the purpose of Conceptual Database Design?	To create a high-level description of the database that is precise enough for technical people to understand but not so detailed that non-technical people cannot participate.
+Basic	What should the Conceptual Database Design enable?	A straightforward translation into a data model supported by a DBMS, such as the relational model.
+Basic	Which model is commonly used in Conceptual Database Design?	The Entity-Relationship (E/R) Model.
+Basic	What is the balance required in Conceptual Database Design?	It should be precise enough for technical understanding but not so detailed that non-technical stakeholders cannot participate.
