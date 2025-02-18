@@ -10,7 +10,6 @@ from openai import OpenAI
 app = Flask(__name__)
 
 client = OpenAI()
-OPENAI_API_KEY="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"
 
 # ============================================
 # Function to create a message in a thread
