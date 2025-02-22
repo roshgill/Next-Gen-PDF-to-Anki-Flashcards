@@ -14,8 +14,6 @@ app = Flask(__name__)
 # OpenAI API Client
 # ============================================
 client = OpenAI()
-OPENAI_API_KEY="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"
-
 
 # Function to create a message in a thread
 def create_message(client, thread_id, content):
@@ -48,25 +46,6 @@ def create_and_poll_run(client, thread_id, assistant_id, instructions, response_
     )
 
 # ============================================
-# Synchronous Deepseek API Call
-# ============================================
-def deepseek_generate(prompt, page_text):
-    url = "https://api.deepseek.com/chat/completions"
-    headers = {"Authorization": f"Bearer sk-14060f17abef4c32ac3c9a4dc602b760"}
-    payload = {
-        "model": "deepseek-chat",
-        "messages": [
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": page_text},
-        ],
-        "stream": False
-    }
-
-    response = requests.post(url, json=payload, headers=headers, verify=True)
-    response_json = response.json()
-    return response_json.get("choices", [{}])[0].get("message", {}).get("content", "")
-
-# ============================================
 def clean_json_response(response_str):
     """Removes markdown code fences from the response."""
     lines = response_str.splitlines()
@@ -76,29 +55,39 @@ def clean_json_response(response_str):
 # ============================================
 # Synchronous Flashcard Generation
 # ============================================
-def generate_flashcards_for_page(page_number, page_text):
+def generate_flashcards_for_page(page_text, card_Creator, threadId, response_format):
     """Generates flashcards for a given page's text."""
     if not page_text.strip():
         return []
 
-    prompt = f"""
-You are a highly skilled flashcard creator using the Deepseek AI model. Your task is to analyze the following text extracted from page {page_number} of a document and generate a series of flashcards to help with reviewing the material. Identify all key concepts, definitions, and essential details.
+    message = create_message(client, threadId, page_text)
+    response = create_and_poll_run(client, threadId, card_Creator.id, page_text, response_format=response_format)
 
-For each key point, create a flashcard with the following structure:
-  - The "front" should be a concise question or prompt that encapsulates the key idea.
-  - The "back" should be a succinct and accurate answer or explanation.
+    # print(f"Response: {response}")
 
-Your output must be in pure JSON format: a JSON array of objects, where each object has exactly two keys: "front" and "back".  
-If there is no important information to review on the page, simply output an empty JSON array ([]).
-"""
-    response_json_str = deepseek_generate(prompt, page_text)
-    cleaned_response = clean_json_response(response_json_str)
-    print(cleaned_response)
+    messages = client.beta.threads.messages.list(thread_id=threadId)
+    # print(f"Messages: {messages}")
 
-    try:
-        flashcards = json.loads(cleaned_response)
-    except json.JSONDecodeError:
-        flashcards = []
+    # print(f"Messages: {messages}")
+    for msg in reversed(messages.data):
+        if msg.role == "assistant":
+            for block in msg.content:
+                if block.type == "text":
+                    try:
+                        data = json.loads(block.text.value)
+                        if "flashcards" in data:
+                            flashcards = data["flashcards"]
+                            break
+                    except Exception as e:
+                        print("Error parsing JSON:", e)
+
+    # print(f"\n\nFlashcards: {flashcards}")
+
+    # try:
+    #     flashcards = response
+    #     print(flashcards)
+    # except json.JSONDecodeError:
+    #     flashcards = []
     return flashcards
 
 # ============================================
@@ -117,15 +106,63 @@ def extract_pages_from_pdf(pdf_path):
 # Synchronous Processing Function
 # ============================================
 def process_pdf_to_flashcards(pdf_path):
-    """Processes the PDF, making synchronous API calls."""
+    "Processes the PDF, making synchronous API calls."
     pages = extract_pages_from_pdf(pdf_path)
     all_flashcards = []
 
+    # print(pages)
+
+    prompt = f"""
+You are provided a document of text from a set of pdf notes. Your functionality is to analyze and understand the topic or info provided and output flashcards.
+
+General Guidelines for Flashcard Creation:
+
+* Concise: Each card should focus on a single concept, question, or fact.
+Incorrectly Formulated Knowledge - Complex and Wordy:
+Front: Where is the Dead Sea located, what is the lowest point on the Earth’s surface, and how does its salinity compare to the ocean?
+Back: The Dead Sea is located between Israel and Jordan, the Dead Shoreline is the lowest point on the Earth’s surface, and it is seven times as salty as the ocean.
+
+Well Formulated Knowledge - Simple and Specific:
+Front: Where is the Dead Sea located?
+Back: Between Israel and Jordan
+
+Front: What is the lowest point on the Earth’s surface?
+Back: The Dead Shoreline
+
+Front: How many times saltier is the Dead Shoreline compared to the ocean?
+Back: Seven times
+
+* Clear: Optimized wording will speed up learning.
+Incorrectly Formulated Knowledge - Less Optimum Item:
+Front: How do plants create their own energy from sunlight in a process involving chlorophyll and light reactions?
+Back: Photosynthesis
+
+Well Formulated Knowledge - More Optimum Item:
+Front: What process do plants use to make energy?
+Back: Photosynthesis
+"""
+
+    response_format={
+        'type': 'json_schema',
+        'json_schema': 
+        {
+            "name":"whocares", 
+            "schema": FlashcardSet.model_json_schema()
+        }
+    }
+
+    card_Creator = create_assistant(client, "Flashcard Creator Agent", prompt, [], "gpt-4o-mini")
+
     for page_number, page_text in pages:
         if page_text and page_text.strip():
-            flashcards = generate_flashcards_for_page(page_number, page_text)
+
+            thread = create_thread(client)
+
+            flashcards = generate_flashcards_for_page(page_text, card_Creator, thread.id, response_format)
             all_flashcards.append(flashcards)
     
+    print(f"All flashcards: {all_flashcards}")
+
     return all_flashcards
 
 def flatten_flashcards(nested_flashcards):
@@ -144,10 +181,16 @@ def generate_anki_import_file(flashcards, filename="anki_import.txt"):
 
     return filename
 
-
 # ============================================
 # OpenAI Tools for Structured Outputs
 # ============================================
+class Flashcard(BaseModel):
+    front: str
+    back: str
+
+class FlashcardSet(BaseModel):
+    flashcards: list[Flashcard]
+
 class CardReview(BaseModel):
     analysis: str
     score: int
@@ -203,11 +246,7 @@ reviewer_Tools = [{
 def aggregate_flashcard(analysis, score, flashcard: dict, delegate, thread_id) -> dict:
     # Build the aggregation message using the review analysis to refine the card
     content = (
-        f"The current flashcard is:\n"
-        f"Front: {flashcard['front']}\n"
-        f"Back: {flashcard['back']}\n\n"
-        f"Review Analysis: {analysis} with score {score}\n\n"
-        "Please refine this flashcard."
+        f"{flashcard}\n"
     )
 
     response_format={
@@ -222,7 +261,6 @@ def aggregate_flashcard(analysis, score, flashcard: dict, delegate, thread_id) -
     run = create_and_poll_run(client, thread_id, delegate.id, content, response_format=response_format)
     
     messages = client.beta.threads.messages.list(thread_id=thread_id)
-    # print(messages)
     for msg in reversed(messages.data):
         for content in msg.content:
             if content.type == 'text':
@@ -230,24 +268,20 @@ def aggregate_flashcard(analysis, score, flashcard: dict, delegate, thread_id) -
                 front = text_content.get('front')
                 back = text_content.get('back')
 
-    print(f"\n Refined flashcard: {front}, {back}\n")
-
     refined = {
-    'front': front,
-    'back': back
+        'front': front,
+        'back': back
     }
+
+    print(f"\nRefined flashcard: {refined}\n")
 
     return refined
 
 def review_flashcard(flashcard: dict, assistant, thread_id):
     # Build the review message
     content = (
-        f"Review the following flashcard:\n"
-        f"Front: {flashcard['front']}\n"
-        f"Back: {flashcard['back']}\n\n"
-        "Return 'analysis' (a brief review) and 'score' (an integer rating from 1 to 10)."
+        f"{flashcard}\n"
     )
-    # print("Inside review_flashcard")
 
     response_format={
         'type': 'json_schema',
@@ -259,20 +293,17 @@ def review_flashcard(flashcard: dict, assistant, thread_id):
     } 
 
     run = create_and_poll_run(client, thread_id, assistant.id, content, response_format=response_format)
-    # print(run)
-    # Assume run returns a dict with a key 'response_text'
     
-    # List all messages in the thread (Test)
     messages = client.beta.threads.messages.list(thread_id=thread_id)
-    # print(messages)
+    
+    print(f"\n Review flashcard thread: {messages}\n")
+    
     for msg in reversed(messages.data):
         for content in msg.content:
             if content.type == 'text':
                 text_content = json.loads(content.text.value)
                 analysis = text_content.get('analysis')
                 score = text_content.get('score')
-
-    # print(f"Analysis: {analysis}, Score: {score}")
     
     return analysis, score
 
@@ -281,19 +312,18 @@ def process_flashcard_refinement(flashcard: dict, delegate, assistant, threshold
     # Create a unique thread for this flashcard's refinement ecosystem
     thread = create_thread(client)
 
-    # print(thread)
-
-    print(f"Original flashcard: {flashcard}")
+    print(f"\nOriginal flashcard: {flashcard}")
 
     current_flashcard = flashcard
 
     while True:
         analysis, score = review_flashcard(current_flashcard, assistant, thread.id)
-        print(f"\nReview output: {analysis}, {score}\n")
+        print(f"Review output: Analysis: {analysis}, Score: {score}")
         if score >= threshold:
             break
         # Use delegate to refine the flashcard based on the review analysis
         current_flashcard = aggregate_flashcard(analysis, score, current_flashcard, delegate, thread.id)
+        print(f"Refined flashcard: {current_flashcard}")
     
     return current_flashcard
 
@@ -307,49 +337,63 @@ def test_local_pdf_processing(pdf_filename):
         print(f"Error: File '{pdf_filename}' not found.")
         return
     print(f"Processing '{pdf_filename}'...\n")
-    try:
-        nested_flashcards = process_pdf_to_flashcards(pdf_filename)
-        if nested_flashcards is None:
-            raise ValueError("process_pdf_to_flashcards returned None")
-        flat_flashcards = flatten_flashcards(nested_flashcards)
-        # output_file = generate_anki_import_file(flat_flashcards)
-        # print(f"✅ Flashcards successfully generated and saved to: {output_file}")
-        return flat_flashcards
-    except Exception as e:
-        print(f"❌ Error occurred: {e}")
+
+    flashcard_deck = process_pdf_to_flashcards(pdf_filename)
+
+    return flashcard_deck
+
+    # try:
+    #     nested_flashcards = process_pdf_to_flashcards(pdf_filename)
+    #     if nested_flashcards is None:
+    #         raise ValueError("process_pdf_to_flashcards returned None")
+    #     # flat_flashcards = flatten_flashcards(nested_flashcards)
+    #     # return flat_flashcards
+    #     return nested_flashcards
+    # except Exception as e:
+    #     print(f"❌ Error occurred: {e}")
 
 
 # Example usage:
 if __name__ == "__main__":
-    # flashcard_deck = test_local_pdf_processing("TFile1.pdf")  # Change filename as needed
-    # print(flashcard_deck)
+   #flashcard_deck = test_local_pdf_processing("TFile1.pdf")  # Change filename as needed
 
-    flashcard_deck = [{'front': 'What is the course code for Database Management Systems?', 'back': 'CMPSC 431W'}, {'front': 'What is the main topic covered in the course CMPSC 431W?', 'back': 'Database Management Systems'}, {'front': "What is the focus of the section titled 'Conceptual Database Design'?", 'back': 'The focus is on designing databases at a conceptual level, often using models like the ER Model.'}, {'front': 'What model is used in Conceptual Database Design?', 'back': 'ER Model (Entity-Relationship Model)'}, {'front': 'Who are the contributors credited for the slides in the course?', 'back': 'Jiannan Wang@SFU and Dan Suciu@UW'}, {'front': 'What is a database?', 'back': 'A database is a collection of data designed to support applications.'}, {'front': 'What is the Relational Model?', 'back': 'The Relational Model is a common data model used by Database Management Systems (DBMS).'}, {'front': 'What are Relational Algebra and Relational Calculus?', 'back': 'Relational Algebra and Relational Calculus are formal query languages used in database systems.'}, {'front': 'What is SQL?', 'back': 'SQL (Structured Query Language) is a concrete way (Domain-Specific Language) to communicate with a DBMS.'}, {'front': 'What is a key consideration when designing a database for an application?', 'back': "A key consideration is how to design the database to effectively support the application's requirements."}, {'front': 'What are the key questions to consider when designing a database?', 'back': '1. How to figure out the database design? 2. What tables to create? 3. Which attributes should be added to each table? 4. What are the relationships between tables? 5. What constraints do tables have to follow?'}, {'front': 'What is the first step in figuring out a database design?', 'back': 'Understanding the requirements and purpose of the database.'}, {'front': 'What should be determined when deciding which tables to create?', 'back': 'The entities and their relationships that need to be represented in the database.'}, {'front': 'What is important when adding attributes to each table?', 'back': 'Ensuring that each attribute is relevant to the entity and supports the data requirements.'}, {'front': 'What needs to be identified regarding the relationships between tables?', 'back': 'The type of relationships (e.g., one-to-one, one-to-many, many-to-many) and how they are implemented (e.g., foreign keys).'}, {'front': 'What constraints should tables follow in a database design?', 'back': 'Constraints such as primary keys, foreign keys, unique constraints, and data type constraints to ensure data integrity.'}]
+    # print(f"Flashcard deck: {flashcard_deck}")
+
+    # Test flashcard deck (From an actual output from local pdf processing)
+#     flashcard_deck = [[{'front': 'What does ER stand for in the context of database design?', 'back': 'Entity-Relationship'}, {'front': 'What is an entity in an ER model?', 'back': 'An entity is a distinct object that can be identified in the domain being studied, such as a person, place, event, or concept.'}, {'front': 'What is an attribute in an ER model?', 'back': 'An attribute is a property or characteristic of an entity, such as a name or date.'}, {'front': 'What is a relationship in an ER model?', 'back': 'A relationship is an association among two or more entities.'}, {'front': 'What symbol is used to represent an entity in an ER diagram?', 'back': 'A rectangle.'}, {'front': 'What symbol is used to represent a relationship in an ER diagram?', 'back': 'A diamond.'}]
+# ,[{'front': 'What is a database?', 'back': 'A database is a collection of data organized to support applications.'}, {'front': 'What is the relational model?', 'back': 'The relational model is a common data model used by database management systems (DBMS) to organize data.'}, {'front': 'What are relational algebra and calculus?', 'back': 'Relational algebra and calculus are formal query languages used to define operations on data within the relational model.'}, {'front': 'What is SQL?', 'back': 'SQL, or Structured Query Language, is a concrete way (DSL) to communicate with a DBMS.'}, {'front': 'How do you design a database to support an application?', 'back': "You design a database by understanding the application's requirements, identifying entities, defining relationships and constraints, and structuring the database to optimize performance and support necessary operations."}]
+# ,[{'front': 'Process for Determining Database Design', 'back': '1. Understand the requirements: Gather all the necessary requirements and user needs.\n2. Identify Entities: Identify key entities or objects of interest in your application (e.g., Users, Orders, Products).\n3. Determine Relationships: Determine how these entities relate to each other (e.g., a User places Orders).\n4. Define Attributes: For each entity, identify the attributes that should be stored (e.g., User has a name, email).\n5. Develop Schema: Based on entities and relationships, draft an initial database schema.\n6. Normalize Data: Ensure database is free of duplication and is efficient (Normalization process).\n7. Apply Constraints: Implement constraints (e.g., primary keys, foreign keys) to maintain data integrity.\n8. Iterate and Refine: Continuously improve based on testing and feedback.'}, {'front': 'Example Tables to Create', 'back': '1. Users - Attributes might include: UserID, Username, Password, Email, CreatedAt.\n2. Products - Attributes might include: ProductID, ProductName, Description, Price, StockQuantity.\n3. Orders - Attributes might include: OrderID, UserID, OrderDate, TotalAmount.\n4. OrderItems - Attributes might include: OrderItemID, OrderID, ProductID, Quantity.'}, {'front': 'Relationships Between Tables', 'back': '1. Users to Orders: One-to-Many relationship (A user can make multiple orders).\n2. Orders to OrderItems: One-to-Many relationship (An order can have multiple items).\n3. Products to OrderItems: Many-to-Many relationship (A product can be in many orders, and an order can contain many products). Typically resolved with a junction table like OrderItems.'}, {'front': 'Constraints for Each Table', 'back': '1. Primary Key: Each table should have a unique identifier, typically an ID field like UserID or ProductID.\n2. Foreign Key: Use foreign keys to establish relationships between tables, e.g., OrderID in the OrderItems table.\n3. Unique Constraints: Ensure certain fields remain unique, such as Email in the Users table.\n4. Check Constraints: Use to enforce domain integrity, such as ensuring Price in Products table is non-negative.'}, {'front': 'Common Mistakes in Database Design', 'back': '1. Redundancy: Do not have duplicate data, which normalization aims to prevent.\n2. Over-normalization: While normalization reduces redundancy, overdoing it can make the database complex and slow.\n3. Lack of Consistency: Ensure naming conventions and data types are consistent across tables.\n4. Ignoring Future Needs: Design with scalability and future needs in mind, allowing for feature expansion.'}]]
+
+    flashcard_deck = [[{'front': 'What is an entity in an ER model?', 'back': 'An entity is a distinct object that can be identified in the domain being studied, such as a person, place, event, or concept.'}, {'front': 'What is an attribute in an ER model?', 'back': 'An attribute is a property or characteristic of an entity, such as a name or date.'}, {'front': 'What is a relationship in an ER model?', 'back': 'A relationship is an association among two or more entities.'}, {'front': 'What symbol is used to represent an entity in an ER diagram?', 'back': 'A rectangle.'}, {'front': 'What symbol is used to represent a relationship in an ER diagram?', 'back': 'A diamond.'}]]
 
     # Create OpenAI Assistant (Reviewer) and Delegate (Aggregator) models   
     delegate_instructions = (
-        "You are a flashcard aggregator agent. Based on the review analysis, refine the flashcard and output only "
-        "the refined flashcard as JSON with keys 'front' and 'back'."
+    "You are a flashcard aggregator agent. Your task is to refine flashcards based on analysis from the reviewer agent."
     )
     reviewer_instructions = (
-        "You are a flashcard reviewer agent trained on the SuperMemo principles for effective learning. "
-        "Review flashcards and output a JSON with keys 'analysis' (your review text) and card 'score' (an integer 1-10)."
+    "You are a flashcard reviewer agent trained in SuperMemo principles for effective learning. Your goal is to evaluate flashcards "
+    "and ensure they are optimized for memory retention using these criteria:"
+    "\n- **Concise**: Is the card as short as possible (very important) while still conveying the key idea?"
+    "\n- **Simple**: Is the language straightforward and free of unnecessary complexity?"
+    "\n- **Focused**: Does the card focus on **only one concept** per question?"
+    "\n\nFor each flashcard, output a JSON with keys:"
+    "\n- 'analysis' (a brief review highlighting strengths and weaknesses of the flashcard)."
+    "\n- 'score' (an integer from 1 to 10, with 10 being a perfectly optimized flashcard). Important: If you provide a score of 8, that means the card does not need to be refined and will move onto the next one."
     )
 
-    card_Aggregator = create_assistant(client, "Flashcard Aggregator Agent", delegate_instructions, [], "gpt-4o")
-    openai_Committee_Assistant1 = create_assistant(client, "Flashcard Reviewer Agent", reviewer_instructions, [], "gpt-4o")
+    card_Aggregator = create_assistant(client, "Flashcard Aggregator Agent", delegate_instructions, [], "gpt-4o-mini")
+    openai_Committee_Assistant1 = create_assistant(client, "Flashcard Reviewer Agent", reviewer_instructions, [], "gpt-4o-mini")
 
-    # print(card_Aggregator)
-    # print(openai_Committee_Assistant1)
-
-    # # Process each flashcard through its refinement ecosystem
-    refined_deck = []
+    print("\n--- Original Flashcards ---")
     for card in flashcard_deck:
-        # print(f"Refining card: {card}")
-        refined_card = process_flashcard_refinement(card, card_Aggregator, openai_Committee_Assistant1, threshold=8)
-        refined_deck.append(refined_card)
-    
-    
-    # print(f"Final refined card: {refined_card}\n")
+        print(card)
 
-    print(refined_deck)
+    refined_deck = []
+    for deck in flashcard_deck:
+        for card in deck:
+            refined_card = process_flashcard_refinement(card, card_Aggregator, openai_Committee_Assistant1, threshold=8)
+            refined_deck.append(refined_card)
+
+    print("\n--- Final Refined Flashcards ---")
+    for card in refined_deck:
+        print(card)
