@@ -15,6 +15,8 @@ app = Flask(__name__)
 # ============================================
 client = OpenAI()
 
+# OPENAI_API_KEY = "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"
+
 # Function to create a message in a thread
 def create_message(client, thread_id, content):
     return client.beta.threads.messages.create(
@@ -47,12 +49,12 @@ def create_and_poll_run(client, thread_id, assistant_id, instructions, response_
 
 def create_completion(client, messages, response_format=None):
     completion = client.chat.completions.create(
-        model="o1-mini",
+        model="gpt-4o",
         messages=messages,
         response_format=response_format
     )
 
-    print(completion.choices[0].message)
+    # print(completion.choices[0].message)
     return completion
 
 # ============================================
@@ -60,7 +62,7 @@ def clean_json_response(response_str):
     """Removes markdown code fences from the response."""
     lines = response_str.splitlines()
     cleaned_lines = [line for line in lines if not line.strip().startswith("```")]
-    return "\n".join(cleaned_lines)
+    return "\n".join(cleaned_lines)    
 
 # ============================================
 # Synchronous Flashcard Generation
@@ -100,42 +102,41 @@ def generate_flashcards_for_page(page_text, card_Creator, threadId, response_for
     #     flashcards = []
     return flashcards
 
-
 def generate_flashcards_for_page2(page_text, response_format):
     """Generates flashcards for a given page's text."""
     if not page_text.strip():
         return []
-    
+
+    content_string = """Your job is to extract flashcards from the provided text.
+
+### STRICT GUIDELINES:
+
+1. **Concise:** Every card must be as **short as possible** while conveying the key idea.
+   - ❌ **Bad:** "What is a composite attribute in an ER Model, and how does it function?"
+   - ✅ **Good:** "What is a composite attribute?" → "An attribute split into subparts."
+
+2. **Focused:** Each card must test **only one fact or concept.**
+   - ❌ **Bad:** "What is a weak entity, and how does it relate to foreign keys?"
+   - ✅ **Good:** "What is a weak entity?" → "An entity that lacks a unique identifier."
+
+3. **No Meta Content:** Ignore slide credits, authors, or any irrelevant meta-information.
+
+### OUTPUT REQUIREMENTS:
+- **PURE JSON ONLY** (no markdown, no newlines, no extra spaces).  
+- Must return a **valid JSON array of objects**.
+- Each object **must contain exactly two keys**: `"front"` and `"back"`.
+- **Do not escape characters unnecessarily** (e.g., no `\'` for apostrophes).
+- **No extra formatting or explanations.**
+
+#### **Example Output:**
+```json
+[{"front":"What is an entity?","back":"A distinct real-world object."},{"front":"What is an attribute?","back":"A property of an entity."}]
+"""
+
     initial_completion_message = [
         {
             "role": "user",
-            "content": """My job is to create flashcards from a document of text from a set of pdf notes.
-
-General Guidelines for Flashcard Creation:
-
-* Concise: Each card should focus on a single concept, question, or fact.
-Incorrectly Formulated Knowledge - Complex and Wordy:
-Front: Where is the Dead Sea located, what is the lowest point on the Earth’s surface, and how does its salinity compare to the ocean?
-Back: The Dead Sea is located between Israel and Jordan, the Dead Shoreline is the lowest point on the Earth’s surface, and it is seven times as salty as the ocean.
-
-Well Formulated Knowledge - Simple and Specific:
-Front: Where is the Dead Sea located?
-Back: Between Israel and Jordan
-
-Front: What is the lowest point on the Earth’s surface?
-Back: The Dead Shoreline
-
-Front: How many times saltier is the Dead Shoreline compared to the ocean?
-Back: Seven times
-
-* Clear: Optimized wording will speed up learning.
-Incorrectly Formulated Knowledge - Less Optimum Item:
-Front: How do plants create their own energy from sunlight in a process involving chlorophyll and light reactions?
-Back: Photosynthesis
-
-Well Formulated Knowledge - More Optimum Item:
-Front: What process do plants use to make energy?
-Back: Photosynthesis"""
+            "content": content_string
         },
         {
             "role": "user",
@@ -143,30 +144,41 @@ Back: Photosynthesis"""
         }
     ]
 
-    messages = create_completion(client, initial_completion_message, response_format=response_format)
+    response = create_completion(client, initial_completion_message, response_format=response_format)
+
+    # print(f"Response: {response}")
+
+    flashcards = response.choices[0].message.content
+    flashcards = json.loads(flashcards)
+
+    # print(f"\nFlashcards = {flashcards}")
+
+    return flashcards
+
+    # DEBUG: Print messages to check structure
+    # print("DEBUG: Messages Output:", messages)
+
 
     # print(f"Messages: {messages}")
-    for msg in reversed(messages.data):
-        if msg.role == "assistant":
-            for block in msg.content:
-                if block.type == "text":
-                    try:
-                        data = json.loads(block.text.value)
-                        if "flashcards" in data:
-                            flashcards = data["flashcards"]
-                            break
-                    except Exception as e:
-                        print("Error parsing JSON:", e)
+    # for msg in reversed(messages.data):
+    #     if msg.role == "assistant":
+    #         for block in msg.content:
+    #             if block.type == "text":
+    #                 try:
+    #                     data = json.loads(block.text.value)
+    #                     if "flashcards" in data:
+    #                         flashcards = data["flashcards"]
+    #                         break
+    #                 except Exception as e:
+    #                     print("Error parsing JSON:", e)
 
-    print(f"\n\nFlashcards: {flashcards}")
+    # print(f"\n\nFlashcards: {flashcards}")
 
     # try:
     #     flashcards = response
     #     print(flashcards)
     # except json.JSONDecodeError:
     #     flashcards = []
-    return flashcards
-
 
 # ============================================
 # PDF Page Extraction
@@ -238,6 +250,8 @@ def process_pdf_to_flashcards(pdf_path):
         }
     }
 
+    # response_format = None
+
     # create_completion(client, response_format=None)
 
     # card_Creator = create_assistant(client, "Flashcard Creator Agent", prompt, [], "o1-mini")
@@ -252,7 +266,7 @@ def process_pdf_to_flashcards(pdf_path):
             # flashcards = generate_flashcards_for_page(page_text, card_Creator, thread.id, response_format)
             all_flashcards.append(flashcards)
     
-    print(f"All flashcards: {all_flashcards}")
+    # print(f"All flashcards: {all_flashcards}")
 
     return all_flashcards
 
@@ -384,7 +398,6 @@ def review_flashcard(flashcard: dict, assistant, thread_id):
     } 
 
     run = create_and_poll_run(client, thread_id, assistant.id, content, response_format=response_format)
-    
     messages = client.beta.threads.messages.list(thread_id=thread_id)
     
     print(f"\n Review flashcard thread: {messages}\n")
@@ -404,7 +417,6 @@ def process_flashcard_refinement(flashcard: dict, delegate, assistant, threshold
     thread = create_thread(client)
 
     print(f"\nOriginal flashcard: {flashcard}")
-
     current_flashcard = flashcard
 
     while True:
@@ -493,9 +505,9 @@ def test_local_pdf_processing(pdf_filename):
 
 # Example usage:
 if __name__ == "__main__":
-   flashcard_deck = test_local_pdf_processing("TFile1.pdf")  # Change filename as needed
+   flashcard_deck = test_local_pdf_processing("TFile2.pdf")  # Change filename as needed
 
-    # print(f"Flashcard deck: {flashcard_deck}")
+   print(f"Flashcard deck: {flashcard_deck}")
 
     # Test flashcard deck (From an actual output from local pdf processing)
     # flashcard_deck = [[{'front': 'What does ER stand for in the context of database design?', 'back': 'Entity-Relationship'}, {'front': 'What is an entity in an ER model?', 'back': 'An entity is a distinct object that can be identified in the domain being studied, such as a person, place, event, or concept.'}, {'front': 'What is an attribute in an ER model?', 'back': 'An attribute is a property or characteristic of an entity, such as a name or date.'}, {'front': 'What is a relationship in an ER model?', 'back': 'A relationship is an association among two or more entities.'}, {'front': 'What symbol is used to represent an entity in an ER diagram?', 'back': 'A rectangle.'}, {'front': 'What symbol is used to represent a relationship in an ER diagram?', 'back': 'A diamond.'}]]
