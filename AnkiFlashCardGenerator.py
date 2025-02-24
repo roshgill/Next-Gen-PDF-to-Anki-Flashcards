@@ -15,8 +15,6 @@ app = Flask(__name__)
 # ============================================
 client = OpenAI()
 
-# OPENAI_API_KEY = "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"
-
 # Function to create a message in a thread
 def create_message(client, thread_id, content):
     return client.beta.threads.messages.create(
