@@ -1,6 +1,7 @@
 pdfplumber
 openai
-os
-json
 flask
 requests
+flask-cors
+werkzeug
+pydantic

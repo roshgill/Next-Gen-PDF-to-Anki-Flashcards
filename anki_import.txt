@@ -2,37 +2,361 @@
 #html:true
 #notetype column:1
 
-Basic	What is the course code for Database Management Systems?	CMPSC 431W
-Basic	What is the main topic covered in the course CMPSC 431W?	Database Management Systems
-Basic	What is the focus of the section titled 'Conceptual Database Design'?	Conceptual Database Design
-Basic	Which model is used in Conceptual Database Design?	ER Model (Entity-Relationship Model)
-Basic	Who are the contributors to the slides for this course?	Jiannan Wang@SFU and Dan Suciu@UW
-Basic	What is a database?	A database is a collection of data designed to support applications.
-Basic	What is the Relational Model?	The Relational Model is a common data model used by Database Management Systems (DBMS).
-Basic	What are Relational Algebra and Relational Calculus?	Relational Algebra and Relational Calculus are formal query languages used in database systems.
-Basic	What is SQL?	SQL (Structured Query Language) is a concrete way (Domain-Specific Language) to communicate with a Database Management System (DBMS).
-Basic	What is the primary question when designing a database for an application?	The primary question is: How do we design the database to support the given application?
-Basic	What are the key questions to consider when designing a database?	1. How to figure out the database design? 2. What tables to create? 3. Which attributes should be added to each table? 4. What are the relationships between tables? 5. What constraints do tables have to follow?
-Basic	What is the first step in database design?	Figuring out the overall database design.
-Basic	What is a critical consideration when creating tables in a database?	Determining which attributes should be added to each table.
-Basic	Why is it important to define relationships between tables in a database?	To ensure data integrity and enable efficient querying and data retrieval.
-Basic	What role do constraints play in database tables?	Constraints enforce rules on the data, ensuring accuracy and reliability.
-Basic	Why is database design important?	Database design is important because it ensures the database structure is agreed upon before implementation, avoids costly updates to the schema in production, and considers key issues like entities, relationships, and constraints.
-Basic	What is a key reason to agree on the database structure before implementation?	Agreeing on the database structure before implementation prevents expensive updates to the schema once the database is in production, as databases may operate for years.
-Basic	What are some key issues to consider during database design?	Key issues include deciding what entities to model, how entities are related, and what constraints exist in the domain.
-Basic	What formalisms can be used for database design?	Formalisms for database design include ER diagrams, UML, and other modeling tools.
-Basic	Why is updating the schema of a production database expensive?	Updating the schema of a production database is expensive because databases may be in operation for years, and changes can disrupt functionality and require significant resources.
-Basic	What is the first step in the database design process?	Requirement Analysis
-Basic	In which step of the database design process does the E/R Model fit in?	Conceptual Database Design
-Basic	What is the third step in the database design process?	Logical Database Design
-Basic	What is the fourth step in the database design process?	Schema Refinement
-Basic	What is the fifth step in the database design process?	Physical Database Design
+Basic	What is an ER Model?	A diagrammatic representation of a database structure.
+Basic	What is the focus of CMPSC 431W?	Database Management Systems.
+Basic	What does Slide Credit indicate?	The author or creator of the presentation material.
+Basic	What is a database?	A collection of data to support applications.
+Basic	What is the relational model?	A common data model used by DBMS.
+Basic	What are relational algebra and calculus?	Formal query languages.
+Basic	What is SQL?	A concrete way to interact with a DBMS.
+Basic	What is database design?	The process of designing a database to support an application.
+Basic	What is database design?	The process of organizing data into tables.
+Basic	What determines table creation?	Database design requirements.
+Basic	What influences attribute selection for tables?	The informational needs of each table.
+Basic	What defines relationships between tables?	How tables are interconnected through data.
+Basic	What are table constraints?	Rules that data must follow within tables.
+Basic	Why do we need database design?	To establish a good structure and framework.
+Basic	Why agree on database structure before implementation?	To ensure efficient and effective data management.
+Basic	Why is updating database schema expensive?	Databases are operational for years.
+Basic	What should you consider when designing a database?	Entities, relationships, constraints.
+Basic	What formalisms exist for database design?	ER diagrams, UML.
+Basic	What is the first step in database design?	Requirement Analysis
+Basic	Where does E/R model fit in database design?	Conceptual Database Design
+Basic	What is the third step in database design?	Logical Database Design
+Basic	What step comes after logical design in database design?	Schema Refinement
+Basic	What follows schema refinement in the database design process?	Physical Database Design
 Basic	What is the final step in the database design process?	Application and Security Design
-Basic	What are the key questions to consider during Requirement Analysis?	1. What data is going to be stored? 2. What are we going to do with the data? 3. Who should access the data?
-Basic	Who is typically involved in Requirement Analysis?	Both technical and non-technical people.
-Basic	What is a common characteristic of Requirement Analysis?	It is usually very sloppy.
-Basic	What is a major challenge in Requirement Analysis?	The gap in understanding between stakeholders, which can be super tricky.
-Basic	What is the purpose of Conceptual Database Design?	To create a high-level description of the database that is precise enough for technical people to understand but not so detailed that non-technical people cannot participate.
-Basic	What should the Conceptual Database Design enable?	A straightforward translation into a data model supported by a DBMS, such as the relational model.
-Basic	Which model is commonly used in Conceptual Database Design?	The Entity-Relationship (E/R) Model.
-Basic	What is the balance required in Conceptual Database Design?	It should be precise enough for technical understanding but not so detailed that non-technical stakeholders cannot participate.
+Basic	What is requirement analysis?	Process of defining user expectations for a system.
+Basic	What is stored data?	Information collected and kept for future access.
+Basic	Purpose of data in requirement analysis?	To understand how it will be used.
+Basic	Who should access stored data?	Authorized personnel and stakeholders.
+Basic	Who participates in requirement analysis?	Both technical and non-technical people.
+Basic	Characteristic of requirement analysis?	Often very sloppy.
+Basic	Challenge in requirement analysis?	Understanding gaps are super tricky.
+Basic	What is a conceptual database design?	A high-level database description.
+Basic	Who can understand a conceptual database design?	Both technical and non-technical people.
+Basic	What should a conceptual database design enable?	Translation into a DBMS-supported data model.
+Basic	What model is suitable for conceptual design?	E/R Model.
+Basic	What is logical database design?	Converting conceptual design into a database schema.
+Basic	What does schema refinement involve?	Identifying problems and refining the database schema.
+Basic	What is physical database design?	Ensuring the database meets performance criteria.
+Basic	What is involved in application and security design?	Reflecting back to the application and ensuring accessibility.
+Basic	What is an ER Diagram?	A visual syntax for database design.
+Basic	What does an ER Diagram include?	Entities and relationships.
+Basic	Purpose of an ER Diagram?	Used from requirement analysis to logical DB design.
+Basic	What is an entity?	An individual object.
+Basic	What is an entity set?	A collection of similar entities.
+Basic	Are entity sets always disjoint?	No, they are not essentially disjoint.
+Basic	How are entities represented in ER diagrams?	As rectangles.
+Basic	How do we define similar for entity sets?	Entities with the same set of attributes.
+Basic	How are similar entities represented in an ER diagram?	By ovals attached to an entity set.
+Basic	What is an attribute in the context of entity sets?	A property or characteristic of an entity.
+Basic	Give an example of an entity in the provided text.	Product
+Basic	Name an attribute of the entity 'Product'.	Category
+Basic	What is another attribute of the entity 'Product'?	Price
+Basic	What is an entity?	A distinct object in the real world.
+Basic	What is represented in E/R diagrams?	Entities may not be explicitly represented.
+Basic	What is an entity set?	A collection of similar entities.
+Basic	Example of an entity name?	Xbox or My Little Pony Doll.
+Basic	Category example in E/R diagrams?	Multimedia System or Toy.
+Basic	Example of a price attribute?	$250 or $25.
+Basic	What is a key?	A set of attributes that uniquely identifies an entity.
+Basic	What must every entity set have?	A key.
+Basic	How are primary key elements denoted?	By underlining.
+Basic	What is a relationship in an ER Model?	A connection between two entities.
+Basic	Entities in the example given	Product, Company
+Basic	What does a product have in terms of description?	A name and a price.
+Basic	What entity does the company 'make'?	Product.
+Basic	What key detail identifies a person uniquely?	SSN (Social Security Number).
+Basic	What is associated with the financial status of a company?	Stock price.
+Basic	What is a primary property a person possesses?	A name and an address.
+Basic	What does a company do in relation to individuals?	Employs persons.
+Basic	What is a relationship in mathematical terms?	An association between elements of two sets.
+Basic	What is a relationship?	A connection between two sets in a cross-product.
+Basic	What does A x B represent?	The set of all pairs from sets A and B.
+Basic	How is a cross-product formed from sets?	By pairing each element of set A with each element of set B.
+Basic	What is a relationship in mathematics?	A subset of the cross-product of sets.
+Basic	What is A x B?	The set of all pairs (a, b) from sets A and B.
+Basic	What is an example of a mathematical relationship?	R = {(1,a), (2,c), (2,d), (3,b)} is a subset of A x B.
+Basic	What is a Relationship?	A subset of entity pairs from two sets.
+Basic	What uniquely identifies tuples in a relationship?	Keys of the involved entities.
+Basic	What is a relationship in databases?	A subset of all possible pairs of entities in two entity sets.
+Basic	What identifies tuples in a relationship?	The keys of the involved entity sets.
+Basic	What is a relationship in database terms?	A connection between two entity sets, often shown by pairs of entities.
+Basic	What uniquely identifies tuples in a relationship?	The keys of the entities involved.
+Basic	What does the tuple 'Apple iPhone 12' represent in a relationship?	A specific pair of entities in the Company and Product entity sets.
+Basic	What do entity sets refer to?	Collections of related entities, like Company and Product.
+Basic	What is an entity?	A distinct real-world object, such as a company or product.
+Basic	What is a composite key?	A key formed by combining keys from different entities, used to uniquely identify tuples in a relationship set.
+Basic	What is a relationship in a database?	A set of associations between entities.
+Basic	What determines a unique relationship?	Keys of its entities.
+Basic	Give an example of a key for a relationship.	{Product.name, Company.name}
+Basic	What can relationships have?	Attributes
+Basic	What are attributes of relationships called?	Descriptive attributes
+Basic	Example of a descriptive attribute in a relationship	Since
+Basic	What is a multi-way relationship?	A relationship involving more than two entities.
+Basic	How can you model a purchase relationship?	By connecting buyers, products, and stores.
+Basic	What entities are involved in a purchase relationship?	Buyers, products, stores.
+Basic	What is a relationship from an entity set to itself called?	A recursive relationship.
+Basic	Example of a recursive relationship?	Employee A manages employee B.
+Basic	What term describes the manager in a recursive relationship?	Supervisor role.
+Basic	What term describes the employee being managed in a recursive relationship?	Subordinate role.
+Basic	What entity is involved in the 'Reports_To' relationship?	Employees.
+Basic	What is an entity in an ER diagram?	A distinct object with a set of attributes.
+Basic	What are the entities in Geography ER diagram?	Country, City, River, Sea.
+Basic	What attributes does the Country entity have?	Name, area, population, gdp.
+Basic	What attributes does the City entity have?	Name, population, longitude, latitude.
+Basic	What attributes does the River entity have?	Name, length.
+Basic	What attributes does the Sea entity have?	Name, max depth.
+Basic	What relationship exists between City and Country?	City belongs to Country.
+Basic	What relationship exists between River and Country?	River crosses Country.
+Basic	What relationship exists between River and Sea?	River ends in Sea.
+Basic	What is a Country entity?	An entity with name, area, population, gdp.
+Basic	What attributes does a City entity have?	Name, population, longitude, latitude.
+Basic	Name an attribute of a River entity.	Length.
+Basic	What attribute does a Sea entity have beside name?	Max depth.
+Basic	What relationship connects City and Country?	City belongs to Country.
+Basic	What relationship exists between River and Country?	River crosses Country.
+Basic	How does a River interact with a Sea?	River ends in Sea.
+Basic	What are integrity constraints?	Rules in a database defining limits on occurrences of events.
+Basic	What's the constraint for course registration?	Current registration must not exceed course capacity.
+Basic	What SQL constraints ensure data integrity?	UNIQUE, FOREIGN KEY, PRIMARY KEY, CHECK.
+Basic	Where can restrictions be applied in an ER diagram?	In relationships or entities.
+Basic	What does a key constraint indicate in relationships?	Arrows indicating associations between entities.
+Basic	Define one-to-one relationship.	Each entity in one set is associated with one entity in another set.
+Basic	Explain many-to-one relationship.	Many on the left can associate with one on the right.
+Basic	Define one-to-many relationship.	One on the left can associate with many on the right.
+Basic	What is a many-to-many relationship?	Entities in both sets can freely associate with members of the other set.
+Basic	What does X -> Y symbolize?	A function mapping from X to Y.
+Basic	What does a function mapping imply in relationships?	Each entity in X appears at most once in the relationship.
+Basic	What is a Product?	An item available for sale.
+Basic	What does 'price' refer to?	The cost of a Product.
+Basic	Who makes a Product?	A Company.
+Basic	What is 'stock_price'?	Value of a Company's stock.
+Basic	What action does 'buys' indicate?	Acquiring a Product.
+Basic	What is a Person?	An individual human being.
+Basic	What is 'name' in the context of Person?	The identity label of a Person.
+Basic	What does 'ssn' stand for?	Social Security Number.
+Basic	What does 'employs' mean?	Company hires someone.
+Basic	What is 'address'?	Location details of a Person.
+Basic	What does an arrow in multiway relationships signify?	It shows determinability of relationship details.
+Basic	Given a person, what can be determined in a purchase scenario?	The product bought and the store where it was bought.
+Basic	What does the arrow in multiway relationships mean?	It signifies a unique association to an entity.
+Basic	What can be determined from a store in a multiway relationship?	The person who shopped and the product bought.
+Basic	Does each store sell multiple products to a person?	No, each store sells one product to one person.
+Basic	What is a multiway relationship?	A relationship involving multiple entities.
+Basic	What does an arrow in a multiway relationship indicate?	A restriction or constraint on an entity.
+Basic	How can we approximate that every person shops in at most one store?	By using an arrow to suggest a constraint.
+Basic	Why is the arrow an approximation for shopping constraint?	A more accurate model requires aggregation or an extra entity.
+Basic	What is a multiway relationship?	A relationship involving more than two entities.
+Basic	What is a binary relationship?	A relationship involving exactly two entities.
+Basic	How can multiway relationships be converted?	By decomposing them into binary relationships.
+Basic	What does the 'ProductOf' denote?	A product involved in a purchase.
+Basic	What does 'Purchase' relate to?	The action involving Product, Store, and Buyer.
+Basic	What entity is associated with 'StoreOf'?	Store involved in the purchase.
+Basic	What entity is associated with 'BuyerOf'?	Person who purchases products.
+Basic	What is a multiway relationship?	A relationship involving more than two entity sets.
+Basic	What does 'ProductOf' signify in a relationship?	An association with a product entity.
+Basic	What does 'StoreOf' signify in a relationship?	An association with a store entity.
+Basic	What does 'BuyerOf' signify in a relationship?	An association with a person entity.
+Basic	What does 'Purchase' represent in an ER model?	An action involving buying a product.
+Basic	What is meant by converting multiway to binary relationships?	Breaking down relationships into pairs between entity sets.
+Basic	What is partial participation?	Not all entities must be involved in a relationship.
+Basic	What is total participation?	All entities must be involved in a relationship.
+Basic	How do bold lines represent participation?	They indicate total participation.
+Basic	What does total participation enforce?	Each entity appears at least once in the relationship.
+Basic	Are there products made by no company?	No, due to total participation.
+Basic	Can companies exist without making a product?	Yes, if participation is partial.
+Basic	What is a single-value constraint?	A rule where an entity can associate with at most one entity.
+Basic	What does combining key constraint and total participation result in?	Ensures every entity in set A fully participates with at most one entity in set B.
+Basic	What does 'makes Product Company' imply?	Each product is made by at most one company.
+Basic	Is it possible for some products to be made by no company?	Yes, if only key constraint applies without total participation.
+Basic	What happens when each product is made by exactly one company?	There is total participation and a key constraint.
+Basic	What is an entity in the ER diagram for Geography?	A component representing real-world objects like countries, cities, rivers, or seas.
+Basic	What attributes define a 'Country'?	name, area, population, gdp
+Basic	What attributes define a 'City'?	name, population, longitude, latitude
+Basic	What attributes define a 'River'?	name, length
+Basic	What attributes define a 'Sea'?	name, max depth
+Basic	What is the relationship between a city and a country?	Each city belongs to a single country.
+Basic	What is the relationship constraint between rivers and countries?	Each river crosses one or several countries.
+Basic	What is the relationship between a river and a sea?	Each river ends in a single sea.
+Basic	What is a Country entity in a Geography ER Diagram?	An entity with attributes: name, area, population, gdp.
+Basic	What attributes define a City entity?	Name, population, longitude, and latitude.
+Basic	Define a River entity attribute.	Attributes include name and length.
+Basic	What attributes define a Sea entity?	Name and max depth.
+Basic	Relationship: What constraint applies to cities?	Each city belongs to a single country.
+Basic	Relationship: What is the constraint for rivers?	Each river crosses one or several countries.
+Basic	Relationship: What is the ending constraint for rivers?	Each river ends in a single sea.
+Basic	What is a weak entity?	An entity that lacks a unique identifier.
+Basic	How does a weak entity derive its key?	From related entities.
+Basic	When is an entity considered strong?	When it has a unique identifier.
+Basic	Give an example of a weak entity.	Course name associated with a university.
+Basic	Why is 'Database class' considered weak?	Its meaning depends on the offering university.
+Basic	What is a weak entity set?	An entity set with keys derived from other related entity sets.
+Basic	What is a partial key?	A key that partially identifies an entity within a weak entity set.
+Basic	What is a supporting entity set?	A related entity set that provides part of the key for a weak entity.
+Basic	What is the role of 'Offer' in weak entities?	It serves as the supporting relationship.
+Basic	What is a subclass in OO?	A specialized entity within a class hierarchy.
+Basic	Purpose of subclass?	To add descriptive attributes specific to the subclass.
+Basic	What is a key concept in OO?	Subclasses and inheritance.
+Basic	What is a class hierarchy?	The arrangement of classes into subclasses and superclasses.
+Basic	What does A ISA B mean?	Every A entity is also considered a B entity.
+Basic	Example of a subclass in employment?	Contracted or Hourly Employee as subtypes of Employee.
+Basic	Define overlap constraints	Determines if an entity can belong to multiple subclasses.
+Basic	Define covering constraints	Indicates if every superclass entity must be a subclass.
+Basic	Example of overlap constraints?	Can Joe be both Hourly and Contract Employee?
+Basic	Example of covering constraints?	Must every Employee be Hourly or Contract?
+Basic	What is aggregation in data modeling?	Modeling a relationship involving another relationship set.
+Basic	Why treat a relationship set as an entity set?	Allows participation in other relationships.
+Basic	Why avoid multi-way relationships?	Distinct relationships like monitoring and sponsoring.
+Basic	What defines the 'Monitors' relationship?	Each sponsorship is monitored by at most one employee.
+Basic	What is ER Modeling?	A process for constructing an entity-relationship diagram.
+Basic	How should a concept be modeled in ER?	As an entity, an attribute, or a relationship.
+Basic	How to identify relationships in ER?	Determine if they are binary or multiway.
+Basic	What is Aggregation in ER Modeling?	A way to abstract relationships and entities.
+Basic	What can ER Models capture?	A lot of data semantics and constraints.
+Basic	What can't ER diagrams capture?	Some constraints.
+Basic	What should you do during conceptual design?	Put un-captured constraints in text.
+Basic	What happens in logical design?	Refine entities and relationships using DB design theory.
+Basic	What is an entity?	A distinct real-world object.
+Basic	What is an attribute?	A property of an entity.
+Basic	Should address be an entity or attribute?	Depends on context and design requirements.
+Basic	Street as entity or attribute?	Generally part of address attribute.
+Basic	ZIP as entity or attribute?	Typically part of address attribute.
+Basic	What is an employee entity?	An object representing a workforce member.
+Basic	What is addrOf in context of employee?	Address associated with an employee.
+Basic	What is an entity?	A distinguishable object in a model.
+Basic	What is an attribute?	A characteristic or property of an entity.
+Basic	Is address an entity or attribute?	An attribute if it records data directly; an entity if broken down further.
+Basic	When is a composite attribute used?	When an attribute can be divided into subparts.
+Basic	How is an employee with multiple addresses represented?	Use multiple records or composite attributes for addresses.
+Basic	What components could an address have?	Zip code, state, street.
+Basic	What is an entity?	A distinct real-world object.
+Basic	What is an attribute?	A property of an entity.
+Basic	When should address be an entity?	When recording multiple detailed values.
+Basic	When should address be an attribute?	When it's a single-valued property.
+Basic	What are examples of address components?	Street, ZIP, Addr 1, Addr 2.
+Basic	What is AddrOf?	An attribute indicating the address of an entity.
+Basic	What decision is made for recording several values?	Choose a new entity.
+Basic	What is a relationship?	An association between entities.
+Basic	What is an entity?	A distinct real-world object.
+Basic	How is a relationship represented?	Through tables showing interactions between entities.
+Basic	What does a product's name indicate in an ER model?	The identifier of a specific product entity.
+Basic	What constraint is suggested by 'A person can only buy a specific product once'?	Restricts multiple purchases of the same product by one person.
+Basic	What is a relationship in a data model?	A connection between two entities.
+Basic	What is an entity in a data model?	A distinct real-world object.
+Basic	What is a benefit of using an entity over a relationship?	Allows multiple instances of each entity combination.
+Basic	Why might we use a new entity instead of a relationship?	To support multiple purchases per product-person pair.
+Basic	What is a multiway relationship?	A relationship involving more than two entities.
+Basic	What is a binary relationship?	A relationship involving exactly two entities.
+Basic	In a database, what does 'name' represent?	An attribute typically used to store an entity's identifier or label.
+Basic	In an ER model, what does 'pname' stand for?	Reference to a policy or person name.
+Basic	What does the attribute 'age' refer to?	The age of a person or entity.
+Basic	What does 'ssn' stand for in databases?	Social Security Number, a unique identifier.
+Basic	What does the attribute 'lot' refer to?	A location or specific area associated with an entity.
+Basic	What are employees in a database context?	Entities representing individuals working in an organization.
+Basic	What is a dependent in a database?	An entity reliant on another for certain benefits or permissions.
+Basic	What is a policy in terms of entities?	A set of rules or guidelines associated with an entity.
+Basic	What does 'policyid' represent in databases?	Unique identifier for a policy.
+Basic	What is 'cost' in a policy context?	The monetary value associated with the policy.
+Basic	What is a key constraint?	It ensures unique identification within a database.
+Basic	What is a multiway vs binary distinction?	Multiway has multiple relationships; binary has two.
+Basic	What is a policy entity?	An entity with fields: policyid, cost.
+Basic	What should policies cover?	A policy is owned by one employee, may cover multiple dependents.
+Basic	What is a dependent in terms of policy coverage?	A person who is covered by an employee's policy, not owning it.
+Basic	What are the fields of an employee entity?	Fields include: ssn, lot, name, pname, age.
+Basic	What is a multiway relationship?	A relationship involving more than two entities.
+Basic	Example of a multiway relationship?	A contract between a supplier, a part, and a department.
+Basic	What does a multiway relationship in Contracts describe?	It relates Parts, Departments, and Suppliers with a quantity.
+Basic	Can binary relationships replace multiway relationships?	No, they cannot adequately substitute.
+Basic	How is quantity recorded in multiway relationships?	With a descriptive attribute on the relationship.
+Basic	Why is 'D deals-with S' insufficient?	It doesn't imply D buys P from S.
+Basic	What is multiway relationship?	Involves more than two entities.
+Basic	What is aggregation?	A process to express a relationship among relationships.
+Basic	What is the constraint of unique store purchase?	Each person can only buy from one store.
+Basic	What limitation exists with the 'Product Purchase Person' example?	Each person buys only one product.
+Basic	What's an issue with 'Country Person' in terms of presidency?	Multiple presidents; country may require a president.
+Basic	What is a product?	An item available for purchase.
+Basic	What is a purchase store?	A location where transactions occur.
+Basic	What is personAddr?	An attribute representing a person's address.
+Basic	What is personName?	An attribute representing a person's name.
+Basic	What should be an entity, according to the text?	People should be entities.
+Basic	What are design principles?	Guidelines for creating effective solutions.
+Basic	What is wrong with dates as entities?	Dates don’t need to be an entity by themselves.
+Basic	What is the next step after conceptual DB design?	Logical DB Design.
+Basic	What does an Entity Set translate to in logical design?	Relation.
+Basic	What does a Relationship translate to in logical design?	Relation.
+Basic	What is needed after creating a DB schema?	Further refinement.
+Basic	What is a powerful tool in database design theory?	Functional dependencies.
+Basic	What concept is integral to database design theory?	Normal Forms.
+Basic	What follows requirements analysis in design?	Conceptual design.
+Basic	What is the outcome of conceptual design?	High-level description of data to be stored.
+Basic	What are the basic constructs in ER models?	Entities, relationships, and attributes.
+Basic	What are some additional constructs in ER models?	Weak entities, class hierarchies, and aggregation.
+Basic	What is a key constraint?	An integrity constraint in ER models.
+Basic	What is a participation constraint?	An integrity constraint in ER models.
+Basic	What constraints apply to class hierarchies?	Overlap and covering constraints.
+Basic	What does ER design involve?	Subjectivity and tricky design choices.
+Basic	What is the next step after ER design?	Logical database design.
+Basic	What is the target of logical database design?	A relational database schema.
+Basic	What does an entity set convert to in a relational database?	A table.
+Basic	What are the key columns in the Product table example?	name, category, and price.
+Basic	What is the data type for the product name in the SQL table?	VARCHAR(40).
+Basic	What is the data type for the price when creating a SQL table?	DECIMAL(2, 10).
+Basic	What serves as the primary key in the Product table?	The product name.
+Basic	What is an example of a table name in relational database design?	Orders
+Basic	What components are used in the Orders table?	prod-ID, cust-ID, date
+Basic	What is included in the Shipment table?	prod-ID, cust-ID, name, date
+Basic	What information does the Shipping-Co table contain?	name, address
+Basic	What is a many-to-many relationship?	A connection allowing multiple records in two tables to relate to each other.
+Basic	What is stored in the 'Shipment' table?	Information about product shipments, including product ID, customer ID, and date.
+Basic	What fields act as the primary key in the 'Shipment' table?	prod-ID, cust-ID, and name.
+Basic	What does the 'FOREIGN KEY' constraint do in SQL?	Links columns in one table to columns in another table.
+Basic	What table is referenced by the FOREIGN KEY (prod-ID, cust-ID)?	Order table
+Basic	What does the FOREIGN KEY (name) reference?	Shipping-Co table.
+Basic	What is a key constraint for many to one relationships?	A single entity instance in one entity is related to multiple instances in another entity.
+Basic	Which relationship exists between 'Company' and 'Product'?	Makes (Many-to-one).
+Basic	What attribute is common in both 'Product' and 'Company'?	Name.
+Basic	What is the price of 'iPhone 12'?	$700.
+Basic	What type of product is 'iPad Pro'?	Electronics.
+Basic	Which company makes 'Office' software?	Microsoft.
+Basic	What is the category of 'Office'?	Software.
+Basic	What is a many-one relationship in database design?	A relationship where multiple entities in one table associate with one entity in another table.
+Basic	How should a many-one relationship be represented in a database table?	Combine related attributes into a single table without separate relations.
+Basic	What is the purpose of combining relations in databases?	To simplify the schema and reduce redundancy.
+Basic	What is a key constraint in database design?	A rule that links entities based on their key attributes.
+Basic	What indicates a successful key constraint when combining relations?	When relationships can be identified without separate tables.
+Basic	What is a primary key?	A unique identifier for each record in a table.
+Basic	What is a foreign key?	An attribute that links to the primary key of another table.
+Basic	What does the primary key do in a Product table?	Uniquely identifies each product.
+Basic	Why use a foreign key in the Product table?	To link products to companies.
+Basic	What is the relation between pname and cname in a Product table?	pname is the product name; cname is the company name.
+Basic	Give an example of a product with category 'Electronics'.	iPhone 12
+Basic	What company makes iPhone 12?	Apple
+Basic	What is the price of the iPad Pro?	$300
+Basic	What is the country of the company Apple?	US
+Basic	How many categories can a product belong to in the given example?	One
+Basic	What company has products in the 'Software' category?	Microsoft
+Basic	How is a product identified uniquely in the given example?	Using pname as the primary key.
+Basic	What is the purpose of combining relations in a database?	To manage and organize data efficiently.
+Basic	What SQL statement is used to create the Product table?	CREATE TABLE Product.
+Basic	What are participation constraints?	Rules determining entity participation in relations.
+Basic	How many entity sets can participation constraints involve in a binary relationship?	One entity set.
+Basic	Can participation constraints capture 'exactly once' semantics in binary relationships?	Yes.
+Basic	What does CREATE TABLE specify?	Defines a new table and its schema.
+Basic	What type of data does pname store?	VARCHAR(50).
+Basic	What does NOT NULL mean for cname?	cname must always have a value.
+Basic	What is a PRIMARY KEY?	An attribute that uniquely identifies table records.
+Basic	What is a FOREIGN KEY?	An attribute linking to another table's primary key.
+Basic	What does the FOREIGN KEY in Product reference?	References Company(name).
+Basic	What is the general approach in ISA hierarchies?	3 relations: Employees, Hourly_Emps, and Contract_Emps.
+Basic	What is the structure of Employees relation?	Employees(ssn, name, lot).
+Basic	What is the structure of Hourly_Emps relation in general approach?	Hourly_Emps(ssnFK, hourly wages, hours_worked).
+Basic	What is the structure of Contract_Emps relation in general approach?	Contract_Emps(ssnFK, contractid).
+Basic	How are queries involving just Hourly_Emps handled in general approach?	Require a join to get some attributes.
+Basic	What is the alternative approach in ISA hierarchies?	Just Hourly_Emps and Contract_Emps.
+Basic	Describe Hourly_Emps relation in alternative approach.	Hourly_Emps(ssn, name, lot, hourly wages, hours_worked).
+Basic	Describe Contract_Emps relation in alternative approach.	Contract_Emps(ssn, name, lot, contractid).
+Basic	What must each employee belong to according to the alternative approach?	One of these two subclasses: Hourly_Emps or Contract_Emps.
+Basic	What is aggregation in ER models?	Treating a relationship as an entity.
+Basic	How are key constraints managed in aggregation?	Combine relations.
