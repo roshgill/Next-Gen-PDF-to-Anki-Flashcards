@@ -13,10 +13,11 @@ from pydantic import BaseModel
 app = Flask(__name__)
 CORS(app)
 
+openai_api_key = os.environ["OPENAI_API_KEY"]
 # ============================================
 # OpenAI API Client
 # ============================================
-client = OpenAI()
+client = OpenAI(api_key=openai_api_key)
 
 def create_message(client, thread_id, content):
     return client.beta.threads.messages.create(
@@ -65,7 +66,7 @@ def generate_flashcards_for_page2(page_text, response_format):
     """Generates flashcards for a given page's text."""
     if not page_text.strip():
         return []
-    
+
     content_string = """Your job is to extract flashcards from the provided text.
 
 ### STRICT GUIDELINES:
@@ -81,7 +82,7 @@ def generate_flashcards_for_page2(page_text, response_format):
 3. **No Meta Content:** Ignore slide credits, authors, or any irrelevant meta-information.
 
 ### OUTPUT REQUIREMENTS:
-- **PURE JSON ONLY** (no markdown, no newlines, no extra spaces).  
+- **PURE JSON ONLY** (no markdown, no newlines, no extra spaces).
 - Must return a **valid JSON array of objects**.
 - Each object **must contain exactly two keys**: "front" and "back".
 - **Do not escape characters unnecessarily** (e.g., no `\'` for apostrophes).
@@ -107,6 +108,11 @@ def extract_pages_from_pdf(pdf_path):
     """Extracts text from each page in a PDF."""
     pages = []
     with pdfplumber.open(pdf_path) as pdf:
+
+        total_pages = len(pdf.pages)
+        if total_pages > 100:
+            return {"error": f"PDF has {total_pages} pages. Limit is 50."}
+
         for i, page in enumerate(pdf.pages, start=1):
             text = page.extract_text() or ""
             pages.append((i, text))
@@ -166,7 +172,7 @@ def generate_anki_import_file(flashcards, filename="anki_import.txt"):
 def process_pdf():
     if 'pdf' not in request.files:
         return jsonify({"error": "No file part"}), 400
-    
+
     file = request.files['pdf']
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
@@ -179,18 +185,44 @@ def process_pdf():
 # The following code converts the codebase into a Flask endpoint to process flashcards into an import file, and return it
 @app.route('/import_file', methods=['POST'])
 def create_import_file():
-    data = request.get_json()
-    nested_flashcards = data.get('flashcardPages')
-
-    if not nested_flashcards:
-        return jsonify({"error": "Flashcards data is required"}), 400
-
     try:
+        # Receive JSON data from frontend
+        data = request.get_json()
+        print("Received data:", data)  # Debugging
+
+        if not data:
+            return jsonify({"error": "No JSON received"}), 400
+
+        nested_flashcards = data.get('flashcardPages')
+        print("Extracted flashcards:", nested_flashcards)  # Debugging
+
+        if not nested_flashcards:
+            return jsonify({"error": "Flashcards data is required"}), 400
+
+        # Flatten flashcards
         flat_flashcards = flatten_flashcards(nested_flashcards)
-        filename = generate_anki_import_file(flat_flashcards)
-        return send_file(filename, as_attachment=True)
+        print("Flattened flashcards:", flat_flashcards)  # Debugging
+
+        # Define output path for Anki import file
+        upload_dir = "/home/RoshanAnkiX/mysite/uploads"
+        os.makedirs(upload_dir, exist_ok=True)  # Ensure directory exists
+        output_file = os.path.join(upload_dir, "anki_import.txt")
+
+        # Generate Anki import file
+        generate_anki_import_file(flat_flashcards, filename=output_file)
+        print("Generated Anki file:", output_file)  # Debugging
+
+        # Ensure the file exists before sending
+        if not os.path.exists(output_file):
+            return jsonify({"error": "Generated file not found"}), 500
+
+        # Return the generated Anki import file
+        return send_file(output_file, as_attachment=True)
+
     except Exception as e:
+        print("Error occurred:", str(e))  # Debugging
         return jsonify({"error": str(e)}), 500
+
 
 # ============================================
 # Pydantic Models for Structured Outputs
