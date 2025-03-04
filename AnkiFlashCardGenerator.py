@@ -47,7 +47,7 @@ def create_and_poll_run(client, thread_id, assistant_id, instructions, response_
 
 def create_completion(client, messages, response_format=None):
     completion = client.chat.completions.create(
-        model="gpt-4o",
+        model="o3-mini",
         messages=messages,
         response_format=response_format
     )
@@ -62,12 +62,13 @@ def clean_json_response(response_str):
 # ============================================
 # Synchronous Flashcard Generation (Version 2)
 # ============================================
-def generate_flashcards_for_page2(page_text, response_format):
+def generate_flashcards_for_page2(flashcard_type, page_text, response_format):
     """Generates flashcards for a given page's text."""
     if not page_text.strip():
         return []
 
-    content_string = """Your job is to extract flashcards from the provided text.
+    if flashcard_type == "basic":
+        content_string = """Your job is to extract flashcards from the provided text.
 
 ### STRICT GUIDELINES:
 
@@ -92,6 +93,37 @@ def generate_flashcards_for_page2(page_text, response_format):
 ```json
 [{"front":"What is an entity?","back":"A distinct real-world object."},{"front":"What is an attribute?","back":"A property of an entity."}]
 """
+    else:
+        content_string = """Your job is to extract **cloze-style flashcards** from the provided text.
+
+### **STRICT GUIDELINES:**
+1. **Cloze Format Only:**
+   - Each card must **hide exactly one word or precise phrase** inside {{c1::}} double literal brackets.
+   - The cloze deletion should be **natural and not give away the answer**.
+   - Avoid redundant or overly obvious deletions.
+
+2. **Concise & Natural Sentences:**  
+   - ❌ **Bad:** "The {{c1::Dead Sea}} is located between {{c1::Israel}} and {{c1::Jordan}}."  
+   - ✅ **Good:** "The Dead Sea is located between Israel and {{c1::Jordan}}."
+
+3. **No Meta Content:**
+   - Ignore slide credits, author names, or any unimportant meta-information.
+
+### **OUTPUT REQUIREMENTS:**
+- **PURE JSON ONLY** (no markdown, no newlines, no extra spaces).
+- Must return a **valid JSON array of objects**.
+- **Do not escape characters unnecessarily** (e.g., no `\'` for apostrophes).
+- **No extra formatting or explanations.**
+
+### **Example Output:**
+```json
+[
+  {"front": "The capital of France is {{c1::Paris}}."},
+  {"front": "The human body has {{c1::206}} bones."},
+  {"front": "The mitochondrion is known as the {{c1::powerhouse}} of the cell."}
+]
+"""
+
     initial_completion_message = [
         {"role": "user", "content": content_string},
         {"role": "user", "content": page_text}
@@ -111,7 +143,7 @@ def extract_pages_from_pdf(pdf_path):
 
         total_pages = len(pdf.pages)
         if total_pages > 100:
-            return {"error": f"PDF has {total_pages} pages. Limit is 50."}
+            return {"error": f"PDF has {total_pages} pages. Limit is 100."}
 
         for i, page in enumerate(pdf.pages, start=1):
             text = page.extract_text() or ""
@@ -121,22 +153,27 @@ def extract_pages_from_pdf(pdf_path):
 # ============================================
 # Asynchronous Processing Functions
 # ============================================
-async def generate_flashcards_for_page_async(page_text, response_format):
+async def generate_flashcards_for_page_async(flashcard_type, page_text, response_format):
     """Asynchronously generates flashcards for a single page by running the synchronous function in a separate thread."""
-    return await asyncio.to_thread(generate_flashcards_for_page2, page_text, response_format)
+    return await asyncio.to_thread(generate_flashcards_for_page2, flashcard_type, page_text, response_format)
 
-async def process_pdf_to_flashcards_async(pdf_path):
+async def process_pdf_to_flashcards_async(flashcard_type, pdf_path):
     """Processes the PDF asynchronously, concurrently generating flashcards for each page."""
     pages = extract_pages_from_pdf(pdf_path)
+    if (flashcard_type == "basic"):
+        schema = FlashcardSet.model_json_schema()
+    else:
+        schema = ClozeFlashcardSet.model_json_schema()
+
     response_format = {
         'type': 'json_schema',
         'json_schema': {
             "name": "whocares",
-            "schema": FlashcardSet.model_json_schema()
+            "schema": schema
         }
     }
     tasks = [
-        generate_flashcards_for_page_async(page_text, response_format)
+        generate_flashcards_for_page_async(flashcard_type, page_text, response_format)
         for _, page_text in pages if page_text.strip()
     ]
     results = await asyncio.gather(*tasks)
@@ -145,9 +182,9 @@ async def process_pdf_to_flashcards_async(pdf_path):
         all_flashcards.append(res)
     return all_flashcards
 
-def process_pdf_to_flashcards(pdf_path):
+def process_pdf_to_flashcards(flashcard_type, pdf_path):
     """Wrapper to run the asynchronous PDF processing function."""
-    return asyncio.run(process_pdf_to_flashcards_async(pdf_path))
+    return asyncio.run(process_pdf_to_flashcards_async(flashcard_type, pdf_path))
 
 def flatten_flashcards(nested_flashcards):
     """Flattens a nested list of flashcards into a single list."""
@@ -157,13 +194,16 @@ def flatten_flashcards(nested_flashcards):
             flat_flashcards.extend(group['flashcards'])
     return flat_flashcards
 
-def generate_anki_import_file(flashcards, filename="anki_import.txt"):
+def generate_anki_import_file(flashcards, card_type, filename="anki_import.txt"):
     """Generates a .txt file for Anki import."""
     header = "#separator:tab\n#html:true\n#notetype column:1\n\n"
     with open(filename, "w", encoding="utf-8") as f:
         f.write(header)
         for card in flashcards:
-            f.write(f"Basic\t{card.get('front', '')}\t{card.get('back', '')}\n")
+            if card_type == "cloze":
+                f.write(f"Cloze\t{card.get('front', '')}\n")
+            else:
+                f.write(f"Basic\t{card.get('front', '')}\t{card.get('back', '')}\n")
     return filename
 
 #// ============================================
@@ -177,8 +217,12 @@ def process_pdf():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
+    card_type = request.form.get('cardType')
+    if card_type not in ['basic', 'cloze']:
+        return jsonify({"error": "Invalid card type"}), 400
+
     # Process PDF and return flashcards
-    flashcards = process_pdf_to_flashcards(file)
+    flashcards = process_pdf_to_flashcards(card_type, file)
     return jsonify(flashcards)
 
 #// ============================================
@@ -196,6 +240,10 @@ def create_import_file():
         nested_flashcards = data.get('flashcardPages')
         print("Extracted flashcards:", nested_flashcards)  # Debugging
 
+        card_type = request.form.get('cardType')
+        if card_type not in ['basic', 'cloze']:
+            return jsonify({"error": "Invalid card type"}), 400
+
         if not nested_flashcards:
             return jsonify({"error": "Flashcards data is required"}), 400
 
@@ -204,12 +252,14 @@ def create_import_file():
         print("Flattened flashcards:", flat_flashcards)  # Debugging
 
         # Define output path for Anki import file
-        upload_dir = "/home/RoshanAnkiX/mysite/uploads"
+        # upload_dir = "/home/RoshanAnkiX/mysite/uploads"
+        upload_dir = "/Users/roshgill/Desktop/venv/uploads"
+        
         os.makedirs(upload_dir, exist_ok=True)  # Ensure directory exists
         output_file = os.path.join(upload_dir, "anki_import.txt")
 
         # Generate Anki import file
-        generate_anki_import_file(flat_flashcards, filename=output_file)
+        generate_anki_import_file(flat_flashcards, card_type, filename=output_file)
         print("Generated Anki file:", output_file)  # Debugging
 
         # Ensure the file exists before sending
@@ -234,11 +284,17 @@ class Flashcard(BaseModel):
 class FlashcardSet(BaseModel):
     flashcards: list[Flashcard]
 
+class ClozeFlashcard(BaseModel):
+    front: str
+
+class ClozeFlashcardSet(BaseModel):
+    flashcards: list[ClozeFlashcard]
+
 # ============================================
 # Example Usage
 # ============================================
 if __name__ == "__main__":
-    # flashcard_deck = process_pdf_to_flashcards("TFile1.pdf")  # Change filename as needed
+    # flashcard_deck = process_pdf_to_flashcards("basic", "TFile1.pdf")  # Change filename as needed
     # flashcards = flatten_flashcards(flashcard_deck)
     # generate_anki_import_file(flashcards, filename="anki_import.txt")
     # print(f"Flashcard deck: {flashcard_deck}")
