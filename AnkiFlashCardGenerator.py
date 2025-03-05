@@ -8,11 +8,23 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from openai import OpenAI
 from pydantic import BaseModel
+import redis
 
 # Creates a Flask application
 app = Flask(__name__)
 CORS(app)
 
+r = redis.Redis(
+  host='charmed-crayfish-51052.upstash.io',
+  port=6379,
+  password='AcdsAAIjcDFjYWEwNjVmMmRiODg0Yjg1OTI3ZjEzZDgzOTdkNDQ3NXAxMA',
+  ssl=True
+)
+
+r.set('foo', 'bar')
+print(r.get('foo'))
+
+upstash_key = os.environ["UPSTASH_KEY"]
 openai_api_key = os.environ["OPENAI_API_KEY"]
 # ============================================
 # OpenAI API Client
@@ -94,34 +106,30 @@ def generate_flashcards_for_page2(flashcard_type, page_text, response_format):
 [{"front":"What is an entity?","back":"A distinct real-world object."},{"front":"What is an attribute?","back":"A property of an entity."}]
 """
     else:
-        content_string = """Your job is to extract **cloze-style flashcards** from the provided text.
+        content_string = """You will create **cloze-style flashcards** from the text I provide.
 
-### **STRICT GUIDELINES:**
-1. **Cloze Format Only:**
-   - Each card must **hide exactly one word or precise phrase** inside {{c1::}} double literal brackets.
-   - The cloze deletion should be **natural and not give away the answer**.
-   - Avoid redundant or overly obvious deletions.
+### OBJECTIVE:
+- **Apply the Minimum Information Principle**: each card should contain only **one small piece** of knowledge (avoid overloading a single card).
+- Focus on **key information, definitions, or essential terms** in the text.
+- Generate **concise, natural-sounding statements** (avoid question formats).
+- Each flashcard must hide a **single, short word or phrase** inside `{{c1::...}}`.
 
-2. **Concise & Natural Sentences:**  
-   - ❌ **Bad:** "The {{c1::Dead Sea}} is located between {{c1::Israel}} and {{c1::Jordan}}."  
-   - ✅ **Good:** "The Dead Sea is located between Israel and {{c1::Jordan}}."
+### AVOID:
+1. **Overly Long Deletions**: The hidden text should typically be **a single word or short phrase**.
+2. **Questions**: Do not produce lines like "What is X?"; instead, use declarative statements.
 
-3. **No Meta Content:**
-   - Ignore slide credits, author names, or any unimportant meta-information.
+### STRICT GUIDELINES:
+1. **Cloze Format**:
+   - Enclose the hidden content in `{{c1:: ... }}`.
+   - Hide **exactly one** significant term or short phrase per card.
+   - Avoid trivial deletions (e.g., hiding “the,” “and,” or single letters).
 
-### **OUTPUT REQUIREMENTS:**
-- **PURE JSON ONLY** (no markdown, no newlines, no extra spaces).
-- Must return a **valid JSON array of objects**.
-- **Do not escape characters unnecessarily** (e.g., no `\'` for apostrophes).
-- **No extra formatting or explanations.**
-
-### **Example Output:**
-```json
-[
-  {"front": "The capital of France is {{c1::Paris}}."},
-  {"front": "The human body has {{c1::206}} bones."},
-  {"front": "The mitochondrion is known as the {{c1::powerhouse}} of the cell."}
-]
+2. **Output Requirements**:
+   - Return **pure JSON only**: a valid **JSON array** of objects.
+   - Each object has a `"front"` key, for example:  
+     `{"front": "Sentence with {{c1::hidden content}}."}`
+   - **No extra formatting**: no Markdown, no code fences, and no explanations.
+   - **No unnecessary escaping** (e.g., don’t escape apostrophes).
 """
 
     initial_completion_message = [
@@ -230,30 +238,30 @@ def process_pdf():
 @app.route('/import_file', methods=['POST'])
 def create_import_file():
     try:
-        # Receive JSON data from frontend
-        data = request.get_json()
-        print("Received data:", data)  # Debugging
-
-        if not data:
-            return jsonify({"error": "No JSON received"}), 400
-
-        nested_flashcards = data.get('flashcardPages')
-        print("Extracted flashcards:", nested_flashcards)  # Debugging
-
+        # Receive form data from frontend
+        flashcards_str = request.form.get('flashcardPages')
         card_type = request.form.get('cardType')
-        if card_type not in ['basic', 'cloze']:
-            return jsonify({"error": "Invalid card type"}), 400
 
-        if not nested_flashcards:
+        print("Received flashcards:", flashcards_str)  # Debugging
+        print("Received card type:", card_type)  # Debugging
+
+        if not flashcards_str:
             return jsonify({"error": "Flashcards data is required"}), 400
+
+        if card_type not in ['basic', 'cloze']:
+            return jsonify({"error": "Invalid card type"}), 400        
+
+        # Parse flashcards from form data
+        nested_flashcards = json.loads(flashcards_str)
+        print("Parsed flashcards:", nested_flashcards)  # Debugging
 
         # Flatten flashcards
         flat_flashcards = flatten_flashcards(nested_flashcards)
         print("Flattened flashcards:", flat_flashcards)  # Debugging
 
         # Define output path for Anki import file
-        # upload_dir = "/home/RoshanAnkiX/mysite/uploads"
-        upload_dir = "/Users/roshgill/Desktop/venv/uploads"
+        upload_dir = "/home/RoshanAnkiX/mysite/uploads"
+        # upload_dir = "/Users/roshgill/Desktop/venv/uploads"
         
         os.makedirs(upload_dir, exist_ok=True)  # Ensure directory exists
         output_file = os.path.join(upload_dir, "anki_import.txt")
@@ -294,8 +302,8 @@ class ClozeFlashcardSet(BaseModel):
 # Example Usage
 # ============================================
 if __name__ == "__main__":
-    # flashcard_deck = process_pdf_to_flashcards("basic", "TFile1.pdf")  # Change filename as needed
-    # flashcards = flatten_flashcards(flashcard_deck)
-    # generate_anki_import_file(flashcards, filename="anki_import.txt")
-    # print(f"Flashcard deck: {flashcard_deck}")
-    app.run(debug=True)
+    flashcard_deck = process_pdf_to_flashcards("cloze", "TFile3.pdf")  # Change filename as needed
+    flashcards = flatten_flashcards(flashcard_deck)
+    generate_anki_import_file(flashcards, "cloze", filename="anki_import.txt")
+    print(f"Flashcard deck: {flashcard_deck}")
+    # app.run(debug=True)
