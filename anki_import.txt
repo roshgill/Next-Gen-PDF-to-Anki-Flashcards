@@ -2,17 +2,381 @@
 #html:true
 #notetype column:1
 
-Cloze	The course code is {{c1::CMPSC 431W}}.
-Cloze	The course focuses on {{c1::Database Management Systems}}.
-Cloze	One of the main topics is {{c1::Conceptual Database Design}}.
-Cloze	The ER model is introduced as {{c1::a way of structuring data}} in the course.
-Cloze	A database is a collection of {{c1::data}} to support applications.
-Cloze	The relational model is a common data model used by {{c1::DBMS}}.
-Cloze	Relational algebra and calculus are examples of {{c1::formal query languages}} for databases.
-Cloze	SQL provides a concrete way ({{c1::DSL}}) to interact with a DBMS.
-Cloze	Designing a database involves determining how to support a given {{c1::application}}.
-Cloze	How to figure out this {{c1::database design}}?
-Cloze	Decide which {{c1::tables}} to create.
-Cloze	Consider which {{c1::attributes}} should be added to each table.
-Cloze	Examine the {{c1::relationships}} between tables.
-Cloze	Identify the {{c1::constraints}} that tables must follow.
+Cloze	The course number is {{c1::CMPSC 431W}}.
+Cloze	The subject covered is {{c1::Database Management Systems}}.
+Cloze	The design approach discussed is {{c1::Conceptual Database Design}}.
+Cloze	The model representing entities and relationships is the {{c1::ER Model}}.
+Cloze	The slides credit is given to {{c1::Jiannan Wang@SFU}}.
+Cloze	Additional slides credit goes to {{c1::Dan Suciu@UW}}.
+Cloze	A Database is {{c1::a collection of data}} that supports applications.
+Cloze	The Relational Model is {{c1::a common data model}} used by DBMS.
+Cloze	Relational Algebra/Calculus are {{c1::formal query languages}} for databases.
+Cloze	SQL is {{c1::a concrete DSL}} to communicate with DBMS.
+Cloze	Designing a database for an application involves applying {{c1::database design}} principles.
+Cloze	Determining the overall {{c1::database design}} drives the solution approach.
+Cloze	Identifying which {{c1::tables}} to create is central to structuring data.
+Cloze	Choosing the appropriate {{c1::attributes}} for each table is essential.
+Cloze	Defining the {{c1::relationships}} between tables is key for data integrity.
+Cloze	Ensuring that tables follow specific {{c1::constraints}} maintains database reliability.
+Cloze	Updating a database's {{c1::schema}} in production is very expensive.
+Cloze	Agree on the overall {{c1::structure}} of the database before selecting an implementation.
+Cloze	Database design involves determining which {{c1::entities}} to model.
+Cloze	Database design addresses how different entities are {{c1::related}}.
+Cloze	Database design considers what {{c1::constraints}} exist in the domain.
+Cloze	Several design formalisms include {{c1::ER diagrams}}.
+Cloze	Several design formalisms include {{c1::UML}}.
+Cloze	The first step in the database design process is {{c1::Requirement Analysis}}.
+Cloze	The E/R Model is utilized during the {{c1::Conceptual Database Design}} phase.
+Cloze	Mapping the logical structure of data occurs in the {{c1::Logical Database Design}} stage.
+Cloze	Optimization and removing redundancies is addressed in {{c1::Schema Refinement}}.
+Cloze	Decisions about storage and performance are made during {{c1::Physical Database Design}}.
+Cloze	Application integration and security measures are planned in the {{c1::Application and Security Design}} stage.
+Cloze	Requirement Analysis identifies the {{c1::data to be stored}}.
+Cloze	Requirement Analysis explains the {{c1::data usage}}.
+Cloze	Requirement Analysis specifies the {{c1::data access policy}}.
+Cloze	Requirement Analysis involves both {{c1::technical and non-technical people}}.
+Cloze	Requirement Analysis is often described as {{c1::sloppy}}.
+Cloze	Requirement Analysis can suffer from a {{c1::gap in understanding}} due to its complexity.
+Cloze	Conceptual Database Design involves creating a {{c1::high-level description}} of the database.
+Cloze	The design is precise enough that {{c1::technical people}} can understand it.
+Cloze	The design is not so detailed that {{c1::non-technical people}} can’t participate.
+Cloze	This design enables a straightforward translation into a {{c1::data model}} supported by a DBMS.
+Cloze	The {{c1::E/R Model}} is an example that fits within Conceptual Database Design.
+Cloze	Logical database design involves converting a conceptual design into a {{c1::database schema}}, tailored to a specific DBMS.
+Cloze	Schema refinement applies {{c1::DB design theory}} to identify and resolve potential problems in the DB schema.
+Cloze	Physical database design ensures that the system meets essential {{c1::performance criteria}}.
+Cloze	Application and security design reflects on the application itself and emphasizes its {{c1::accessibility}}.
+Cloze	ER Diagrams are used from requirement analysis to {{c1::logical database design}}.
+Cloze	An ER Diagram provides a {{c1::visual syntax}} for database design that is clear for both technical and non-technical audiences.
+Cloze	ER stands for {{c1::Entity and Relationship}}.
+Cloze	In the example, the relationship from Product to Company is depicted as {{c1::Makes}}.
+Cloze	An {{c1::entity}} is an individual object.
+Cloze	An {{c1::entity set}} is a collection of similar entities.
+Cloze	Entity sets are represented as {{c1::rectangles}} in ER diagrams.
+Cloze	Entity sets are {{c1::not essentially disjoint}}.
+Cloze	A specific {{c1::person}} is an example of an entity.
+Cloze	A specific {{c1::product}} is an example of an entity.
+Cloze	Similar entities have the same {{c1::attributes}}.
+Cloze	In ER diagrams, attributes are represented by {{c1::ovals}} attached to an entity set.
+Cloze	A product's unique identifier is its {{c1::name}}.
+Cloze	A product's classification is defined by its {{c1::category}}.
+Cloze	A product's cost is indicated by its {{c1::price}}.
+Cloze	Entities are not explicitly represented in {{c1::E/R diagrams}}.
+Cloze	An entity is identified by its {{c1::name}}.
+Cloze	Entities often include a {{c1::category}} attribute.
+Cloze	Entities often include a {{c1::price}} attribute.
+Cloze	One example of an entity is {{c1::Xbox}}.
+Cloze	Another example of an entity is {{c1::My Little Pony Doll Product}}.
+Cloze	A collection of similar entities is called an {{c1::Entity Set}}.
+Cloze	A key is a set of {{c1::attributes}} that uniquely identifies an entity.
+Cloze	Every entity set must have a {{c1::key}}.
+Cloze	Elements of the primary key are denoted by {{c1::underlining}}.
+Cloze	The attributes name, category, and price form the key for {{c1::Product}}.
+Cloze	The 'R' in E/R stands for {{c1::Relationships}}.
+Cloze	A relationship is established between {{c1::two entities}}.
+Cloze	The Product entity is characterized by the attribute {{c1::name}}.
+Cloze	The relationship {{c1::Makes}} connects the Product entity to the Company entity.
+Cloze	A Category is identified by its {{c1::name}} attribute.
+Cloze	A Product is described with a {{c1::name}}.
+Cloze	A Product has a {{c1::price}} attribute.
+Cloze	A Company {{c1::makes}} a Product.
+Cloze	A Company is assigned a {{c1::stock_price}} value.
+Cloze	A Company also {{c1::buys}} products.
+Cloze	A Company {{c1::employs}} a Person.
+Cloze	A Person is identified by a unique {{c1::ssn}}.
+Cloze	A Person has an {{c1::address}} attribute.
+Cloze	Set A is defined as {{c1::{1,2,3}}}.
+Cloze	Set B is defined as {{c1::{a,b,c,d}}}.
+Cloze	A relationship assigns element 1 from set A to element {{c1::a}}.
+Cloze	A relationship assigns element 2 from set A to element {{c1::b}}.
+Cloze	A relationship assigns element 3 from set A to element {{c1::c}}.
+Cloze	The extra element in set B is {{c1::d}}, which remains unpaired.
+Cloze	A relationship in mathematics is defined as the {{c1::cross-product}} of two sets.
+Cloze	The cross-product of two sets is denoted by {{c1::A x B}}.
+Cloze	A x B is the set of all {{c1::ordered pairs}} (a, b) where a is from A and b is from B.
+Cloze	For A = {1,2,3} and B = {a,b,c,d}, the cross-product A x B produces {{c1::12}} pairs.
+Cloze	A relationship is defined as a {{c1::subset}} of A x B.
+Cloze	A x B is known as the {{c1::cross-product}} of sets A and B.
+Cloze	For A = {1,2,3} and B = {a,b,c,d}, A x B contains {{c1::12}} pairs.
+Cloze	A relationship between two entity sets is a {{c1::subset}} of all possible pairs of entities.
+Cloze	In a relationship, tuples are uniquely identified by the {{c1::keys}} of the participating entity sets.
+Cloze	The association between companies and products in a database is an example of a {{c1::relationship}}.
+Cloze	A relationship between entity sets P and C is a {{c1::subset}} of all possible pairs of entities.
+Cloze	The set of all possible pairs of entities from P and C is known as the {{c1::Cartesian product}}.
+Cloze	Tuples in a relationship are uniquely identified by the keys of {{c1::P and C}}.
+Cloze	A relationship table in the given example includes attributes such as company name, product name, product category, and {{c1::price}}.
+Cloze	A relationship between two entity sets is a {{c1::subset}} of all possible pairs of entities.
+Cloze	The complete set of all possible pairs of entities from two sets is the {{c1::Cartesian product}}.
+Cloze	Tuples in a relationship are uniquely identified by the {{c1::keys}} of the related entity sets.
+Cloze	A relationship in a database is defined as a {{c1::set}}.
+Cloze	A relationship is uniquely determined by the {{c1::keys}} of its entities.
+Cloze	In the Makes relationship, the key is {Product.name, Company.name}, showing a unique combination of {{c1::entity keys}}.
+Cloze	Relationships may have {{c1::descriptive attributes}}.
+Cloze	The attribute {{c1::since}} records when a company began making a product.
+Cloze	A relation between a product and a company is indicated by {{c1::Makes}}.
+Cloze	One descriptive attribute for entities is {{c1::name}}.
+Cloze	Product details may include the attribute {{c1::category}}.
+Cloze	Product information often captures the {{c1::price}}.
+Cloze	A {{c1::multi-way relationship}} models purchase connections among buyers, products, and stores.
+Cloze	The entity representing an item available for purchase is known as a {{c1::Product}}.
+Cloze	The record of purchase transactions in the relationship model is sometimes called a {{c1::Purchase Store}}.
+Cloze	The buyer in the purchase relationship is represented by a {{c1::Person}}.
+Cloze	A relationship from an entity set to itself is called a {{c1::self-relationship}}.
+Cloze	In the example, Employee A {{c1::manages}} employee B.
+Cloze	The relationship is indicated by the role label {{c1::Reports_To}}.
+Cloze	One role in this relationship is identified as the {{c1::supervisor}}.
+Cloze	The corresponding role on the other side is the {{c1::subordinate}}.
+Cloze	The entity set containing these individuals is termed {{c1::Employees}}.
+Cloze	An attribute of the Employees entity is {{c1::ssn}}, representing a unique identifier.
+Cloze	Another attribute of the Employees entity is the {{c1::name}}.
+Cloze	A further attribute noted for Employees is {{c1::lot}}.
+Cloze	The ER diagram exercise focuses on {{c1::Geography}}.
+Cloze	The entity with attributes name, area, population, and gdp is a {{c1::Country}}.
+Cloze	The entity with attributes name, population, longitude, and latitude is a {{c1::City}}.
+Cloze	The entity defined by attributes name and length is a {{c1::River}}.
+Cloze	The entity with attributes name and max depth represents a {{c1::Sea}}.
+Cloze	A city is linked to a country by the relationship {{c1::belongs to}}.
+Cloze	A river is associated with a country by the relationship where it {{c1::crosses}} the country.
+Cloze	A river terminates in a sea by the relationship where it {{c1::ends in}} that sea.
+Cloze	The entity {{c1::Country}} includes attributes such as name, area, population, and gdp.
+Cloze	The entity {{c1::City}} includes attributes such as name, population, longitude, and latitude.
+Cloze	The entity {{c1::River}} includes attributes such as name and length.
+Cloze	The entity {{c1::Sea}} includes attributes such as name and max depth.
+Cloze	A City {{c1::belongs to}} a Country.
+Cloze	A River {{c1::crosses}} a Country.
+Cloze	A River {{c1::ends in}} a Sea.
+Cloze	Integrity constraints are database {{c1::rules}} that limit occurrences of certain events.
+Cloze	A student cannot register for a course if it is already at {{c1::capacity}}.
+Cloze	The inequality currentRegistration ≤ Capacity exemplifies an {{c1::integrity constraint}}.
+Cloze	SQL integrity constraints include {{c1::UNIQUE}}, FOREIGN KEY, PRIMARY KEY, CHECK, etc.
+Cloze	SQL integrity constraints include UNIQUE, {{c1::FOREIGN KEY}}, PRIMARY KEY, CHECK, etc.
+Cloze	SQL integrity constraints include UNIQUE, FOREIGN KEY, {{c1::PRIMARY KEY}}, CHECK, etc.
+Cloze	SQL integrity constraints include UNIQUE, FOREIGN KEY, PRIMARY KEY, {{c1::CHECK}}, etc.
+Cloze	In an ER diagram, integrity constraints are represented as restrictions in {{c1::relationships}} or entities.
+Cloze	Key Constraints of Relationships are indicated using {{c1::arrows}}.
+Cloze	A relationship where each entity is paired with exactly one entity is known as a {{c1::one-to-one}} relationship.
+Cloze	A relationship where several entities on the left correspond to a single entity on the right is defined as a {{c1::many-to-one}} relationship.
+Cloze	The notation 'X -> Y' signifies a {{c1::function}} mapping from X to Y.
+Cloze	A relationship where a single entity associates with several entities on the other side is known as a {{c1::one-to-many}} relationship.
+Cloze	A relationship permitting multiple associations on both sides is characterized as a {{c1::many-to-many}} relationship.
+Cloze	A company's identifier is its {{c1::name}}.
+Cloze	The industry sector for a company is shown by its {{c1::category}}.
+Cloze	A company's market valuation is recorded as its {{c1::stock_price}}.
+Cloze	A product is identified by its {{c1::name}}.
+Cloze	A product's cost is indicated by its {{c1::price}}.
+Cloze	The production relationship from a company to a product is represented by {{c1::makes}}.
+Cloze	The entity representing items available for sale is the {{c1::Product}}.
+Cloze	The purchasing relationship is captured by {{c1::buys}}.
+Cloze	The employment connection is expressed with {{c1::employs}}.
+Cloze	An individual is denoted by the entity {{c1::Person}}.
+Cloze	An individual's unique identifier is captured as {{c1::ssn}}.
+Cloze	An individual's residence detail is recorded as {{c1::address}}.
+Cloze	In multiway relationships, the arrow indicates that given a {{c1::person}}, other details can be determined.
+Cloze	In multiway relationships, knowing a person tells us {{c1::what they bought}}.
+Cloze	In multiway relationships, knowing a person tells us the {{c1::store}} where the purchase was made.
+Cloze	Arrows in multiway relationships show that each store uniquely determines the {{c1::product}} it sells.
+Cloze	Arrows in multiway relationships show that each store uniquely determines the {{c1::person}} who shopped there.
+Cloze	Arrows are used to denote relationships that involve multiple entities, known as {{c1::multiway relationships}}.
+Cloze	The model's constraint that every person shops in at most one store is only an {{c1::approximation}}.
+Cloze	Achieving a strict constraint that every person shops in at most one store requires additional modeling such as {{c1::aggregation}} or an extra entity.
+Cloze	The multiway relationship example includes entities: Product, Purchase, Store, and {{c1::Person}}.
+Cloze	Multiway relationships are converted into {{c1::binary relationships}}.
+Cloze	The conversion process includes an additional attribute: {{c1::date}}.
+Cloze	The role ProductOf links to the entity {{c1::Product}}.
+Cloze	The linking relationship introduced is called {{c1::Purchase}}.
+Cloze	The role StoreOf connects to the entity {{c1::Store}}.
+Cloze	The role BuyerOf is associated with the entity {{c1::Person}}.
+Cloze	The conversion from multiway relationships to binary involves creating a separate table for a {{c1::purchase}} event.
+Cloze	The timestamp attribute in the purchase table is represented by the {{c1::date}}.
+Cloze	The relationship linking a purchase to a product is captured by the {{c1::ProductOf}} relation.
+Cloze	A purchase record is connected to the store through the {{c1::StoreOf}} relationship.
+Cloze	The association between a purchase and the buyer is indicated by the {{c1::BuyerOf}} relation.
+Cloze	A bold line indicates {{c1::total participation}}, meaning every entity appears at least once in the relationship.
+Cloze	Total participation requires that every entity is involved in the relationship, in contrast with {{c1::partial participation}}.
+Cloze	In the relationship 'Product makes Company', total participation ensures that every {{c1::product}} is linked to a company.
+Cloze	The query 'Are there products made by no company?' is addressed by enforcing {{c1::total participation}}, which prevents such cases.
+Cloze	Single-value Constraints combine a {{c1::key constraint}} with a total participation constraint.
+Cloze	Under the key constraint, each product is made by {{c1::at most one}} company.
+Cloze	Total participation requires that each product is made by {{c1::exactly one}} company.
+Cloze	The geography ER diagram includes an entity named {{c1::Country}}.
+Cloze	The Country entity is defined by attributes such as name, area, population, and {{c1::gdp}}.
+Cloze	The geography ER diagram also includes an entity called {{c1::City}}.
+Cloze	City entities have key attributes including name, population, longitude, and {{c1::latitude}}.
+Cloze	Another entity in the diagram is the {{c1::River}}, characterized by its name and length.
+Cloze	The Sea entity in the ER diagram is represented with attributes name and {{c1::max depth}}.
+Cloze	Each city in the diagram is associated with a single {{c1::country}}.
+Cloze	A river in the geography diagram can cross one or several {{c1::countries}}.
+Cloze	In the ER diagram, each river ends in a single {{c1::sea}}.
+Cloze	A {{c1::Country}} entity in the Geography ER diagram includes the attributes name, area, population, and gdp.
+Cloze	A {{c1::City}} entity in the Geography ER diagram includes the attributes name, population, longitude, and latitude.
+Cloze	A {{c1::River}} entity in the Geography ER diagram is defined by the attributes name and length.
+Cloze	A {{c1::Sea}} entity in the Geography ER diagram is characterized by the attributes name and max depth.
+Cloze	Each city belongs to a single {{c1::country}}.
+Cloze	Each river crosses one or several {{c1::countries}}.
+Cloze	Each river ends in a single {{c1::sea}}.
+Cloze	An entity may only be of interest when it is associated with a {{c1::related entity}}.
+Cloze	A course name is significant only when it is coupled with a specific {{c1::university}}.
+Cloze	A weak entity set derives its key from a {{c1::related entity set}}.
+Cloze	The term 'Database class' differs from 'Database class offered by {{c1::Penn State}}.'
+Cloze	In the given schema, cname represents a {{c1::course name}}.
+Cloze	In the given schema, uname denotes a {{c1::university name}}.
+Cloze	A weak entity set is one whose key is derived from {{c1::other entity sets}}.
+Cloze	In the given example, cname functions as a {{c1::partial key}}.
+Cloze	University is identified as the {{c1::supporting entity set}}.
+Cloze	Offer is designated as the {{c1::supporting relationship}}.
+Cloze	Key concept in object-oriented programming uses {{c1::subclasses}} to represent specialized entities.
+Cloze	Declaring an 'A ISA B' relationship means every A entity is also considered {{c1::B}}.
+Cloze	The Employee class is divided into two specialized types: {{c1::Contracted/Hourly}}.
+Cloze	Overlap constraints evaluate whether an entity like Joe can be both {{c1::Hourly Employee}} and a Contract Employee.
+Cloze	Covering constraints determine if every employee must be categorized as either {{c1::Hourly or Contract}}.
+Cloze	Modeling a relationship involving another relationship set is achieved through {{c1::aggregation}}.
+Cloze	Aggregation allows a relationship set (e.g., Employees) to be treated as an {{c1::entity set}} for other relationships.
+Cloze	Distinct monitors and sponsors relationships are maintained instead of combining them into a {{c1::multi-way relationship}}.
+Cloze	Each sponsorship is monitored by at most one {{c1::employee}}.
+Cloze	ER Modeling can be {{c1::tricky}}!
+Cloze	A concept can be modeled as an entity or as an {{c1::attribute}}.
+Cloze	A concept may also be modeled as an {{c1::relationship}}.
+Cloze	Identifying relationships involves choosing between {{c1::binary}} or multiway connections.
+Cloze	Identifying relationships may require the use of {{c1::aggregation}}.
+Cloze	The ER Model can capture a lot of {{c1::data semantics}}.
+Cloze	Some constraints cannot be captured in ER diagrams and should be noted in the {{c1::conceptual design}}.
+Cloze	Further refinement is carried out in the logical (relational) design as part of {{c1::DB design theory}}.
+Cloze	An {{c1::entity}} is a distinct object with its own identity in data modeling.
+Cloze	An {{c1::attribute}} is a property that describes an entity.
+Cloze	Employee is typically modeled as an {{c1::entity}} in database design.
+Cloze	Components such as Street, Addr, ZIP, Addr 1, and Addr 2 are treated as {{c1::attributes}} of an address.
+Cloze	The term AddrOf signifies the {{c1::relationship}} between an employee and their address.
+Cloze	When an employee has multiple addresses, the data model may require the address to be treated as an {{c1::entity}}.
+Cloze	A simple attribute is often insufficient when internal structure, such as a {{c1::zip code}}, is relevant.
+Cloze	When a property requires recording several values, the design typically opts for a separate {{c1::entity}}.
+Cloze	The Address example illustrates the decision between modeling it as an {{c1::attribute}} or as a separate entity.
+Cloze	Employee is connected to Address through the {{c1::AddrOf}} relationship.
+Cloze	A person can only buy a specific product {{c1::once}}.
+Cloze	The Purchase record illustrates a {{c1::relationship}} rather than an independent entity.
+Cloze	The composite key in the purchase record is formed from Person.name, Product.name, and {{c1::Date}}.
+Cloze	Using a new {{c1::entity}} instead of a relationship permits multiple instances of each entity combination.
+Cloze	The design allows {{c1::multiple purchases}} per product, person pair.
+Cloze	The transaction record begins with fields like {{c1::date}}, PID#, quantity, category, and price.
+Cloze	The schema includes the entity named {{c1::Product}}.
+Cloze	The relationship is indicated by the term {{c1::ProductOf}}.
+Cloze	The schema also features the entity {{c1::Person}}.
+Cloze	Ensuring that each policy is owned by {{c1::one employee}} prevents joint ownership.
+Cloze	A policy may cover {{c1::multiple dependents}}, creating a one-to-many association.
+Cloze	The binary relationship design is chosen over a multiway relationship to model policy ownership by a {{c1::single employee}}.
+Cloze	The relationship linking employees and dependents is named {{c1::Covers}}.
+Cloze	The policies table is defined with the unique attribute {{c1::policyid}} along with cost.
+Cloze	A multiway relationship involves {{c1::more than two}} entities.
+Cloze	A binary relationship involves exactly {{c1::two}} entities.
+Cloze	Each policy is owned by a single {{c1::employee}}.
+Cloze	A policy may cover multiple {{c1::dependents}}.
+Cloze	The Policies table includes attributes like {{c1::policyid}}, cost, and name.
+Cloze	Multiway relationships inherently involve {{c1::more than two}} entities.
+Cloze	The Contracts relationship is a {{c1::multiway}} relationship connecting Parts, Departments, and Suppliers.
+Cloze	The Contracts relationship includes a descriptive attribute called {{c1::quantity}}.
+Cloze	No combination of binary relationships can adequately substitute for a {{c1::multiway}} relationship.
+Cloze	Binary relationships cannot cleanly represent the concept of recording a specific {{c1::quantity}} in a contract.
+Cloze	Connecting product, purchase, and store in one relationship depicts a {{c1::multiway}} association.
+Cloze	Restricting each person to buying in a single store is achieved through a {{c1::membership}} association.
+Cloze	The Product Purchase Person example erroneously restricts each person to {{c1::only one product}}.
+Cloze	The President Country Person example incorrectly permits a country to have {{c1::multiple presidents}}.
+Cloze	The design flaw in the President Country Person model highlights the need for every country to have a {{c1::president}}.
+Cloze	The text title questions what is {{c1::wrong}} in the design.
+Cloze	The element representing time is the {{c1::date}}.
+Cloze	An item for sale is referred to as {{c1::Product}}.
+Cloze	A location for transactions is indicated by the term {{c1::Purchase Store}}.
+Cloze	The specific field for a person's address is noted as {{c1::personAddr}}.
+Cloze	The specific field for a person's name is noted as {{c1::personName}}.
+Cloze	It is suggested that people be conceived as {{c1::entities}}.
+Cloze	Design criticism indicates that treating {{c1::dates}} as an independent entity is unnecessary.
+Cloze	The singular term {{c1::date}} used in design introduces ambiguity.
+Cloze	The inclusion of {{c1::Product}} represents the core item in the system.
+Cloze	The term {{c1::Purchase Store}} denotes where a transaction occurs.
+Cloze	The design considers the entity {{c1::Person}} to represent the user involved.
+Cloze	The process moves from conceptual DB design to {{c1::Logical DB Design}}.
+Cloze	A basic rule in database design is to transform an Entity Set into a {{c1::Relation}}.
+Cloze	A Relationship is also transformed into a {{c1::Relation}} in the schema.
+Cloze	The initial DB schema requires further {{c1::refinement}}.
+Cloze	A powerful tool in database design theory is the concept of {{c1::functional dependencies}}.
+Cloze	Ensuring database integrity involves adhering to {{c1::Normal Forms}}.
+Cloze	Conceptual design follows {{c1::requirements analysis}}.
+Cloze	Conceptual design yields a high-level description of {{c1::data to be stored}}.
+Cloze	Basic constructs include {{c1::entities}}.
+Cloze	Basic constructs include {{c1::relationships}}.
+Cloze	Basic constructs include {{c1::attributes}}.
+Cloze	Additional constructs include {{c1::weak entities}}.
+Cloze	Additional constructs include {{c1::class hierarchies}}.
+Cloze	Additional constructs include {{c1::aggregation}}.
+Cloze	Integrity constraints include {{c1::key constraints}}.
+Cloze	Integrity constraints include {{c1::participation constraints}}.
+Cloze	Integrity constraints include {{c1::overlap/covering constraints}}.
+Cloze	ER design is subjective and {{c1::tricky}}.
+Cloze	ER design involves the choice between {{c1::entity vs. attributes}}.
+Cloze	ER design involves the choice between {{c1::entity vs. relationship}}.
+Cloze	ER design involves the choice between {{c1::binary vs. multiway relationships}}.
+Cloze	ER design involves the choice between {{c1::aggregation vs. multiway relationships}}.
+Cloze	The next step after conceptual design is {{c1::logical database design}} leading towards a relational DB schema.
+Cloze	Entity sets are converted into {{c1::tables}} in relational database design.
+Cloze	The SQL statement used to create a new table is {{c1::CREATE TABLE}}.
+Cloze	The primary key in the Product table is set on the {{c1::name}} column.
+Cloze	The Product table defines the price attribute using the {{c1::DECIMAL(2, 10)}} data type.
+Cloze	Logical DB Design converts an ER diagram into a {{c1::relational}} model.
+Cloze	The Orders table includes the attribute {{c1::prod-ID}}.
+Cloze	The Orders table includes the attribute {{c1::cust-ID}} representing the customer identifier.
+Cloze	The Orders table uses the attribute {{c1::date}} to record the order date.
+Cloze	The Shipment table includes the attribute {{c1::name}} to specify the shipping company.
+Cloze	The Shipping-Co table defines the attribute {{c1::address}} for the shipping company's location.
+Cloze	The Shipment table uses a composite primary key consisting of {{c1::prod-ID, cust-ID, name}}.
+Cloze	The Shipment table includes a foreign key on prod-ID and cust-ID that references {{c1::Order(prod-ID, cust-ID)}}.
+Cloze	The foreign key on the name column in Shipment references the {{c1::Shipping-Co}} table.
+Cloze	The prod-ID column in Shipment is defined with the data type {{c1::CHAR(6)}}.
+Cloze	The cust-ID column in Shipment is declared with the data type {{c1::VARCHAR(60)}}.
+Cloze	The date column in the Shipment table uses the data type {{c1::DATETIME}}.
+Cloze	The Shipment table functions as a junction table that resolves a {{c1::many-to-many}} relationship.
+Cloze	Many-to-one relationships connect multiple products to a single {{c1::company}}.
+Cloze	The Product relation includes attributes such as name, category, price, and {{c1::makes}}.
+Cloze	The Company relation is defined by attributes like name and {{c1::country}}.
+Cloze	An example product provided is {{c1::iPhone 12}}.
+Cloze	The category for iPhone 12 is {{c1::Electronics}}.
+Cloze	iPhone 12 is listed with a price of {{c1::$700}}.
+Cloze	Another example product is {{c1::iPad Pro}}.
+Cloze	iPad Pro is priced at {{c1::$300}}.
+Cloze	The product Office appears as an example in the table with the category {{c1::Software}}.
+Cloze	Office is offered at a price of {{c1::$120}}.
+Cloze	In the examples, Apple is the company making both iPhone 12 and iPad Pro, with its country noted as {{c1::US}}.
+Cloze	The product Office is associated with the company {{c1::Microsoft}}.
+Cloze	The constraints focus on {{c1::Combining Relations}} in relational design.
+Cloze	One of the relations mentioned is the {{c1::Product}} relation.
+Cloze	The Product relation includes attributes such as {{c1::name, category, price}}.
+Cloze	The Make relation connects product and company information using {{c1::P.name C.name}}.
+Cloze	An example product is {{c1::iPhone 12}}, listed with a price of $700.
+Cloze	The iPad Pro is categorized under {{c1::Electronics}} in the Product relation.
+Cloze	The Make relation shows that {{c1::Apple}} produces products like iPhone 12 and iPad Pro.
+Cloze	The Company relation captures details such as {{c1::name, country}}.
+Cloze	The Office product is classified as {{c1::Software}}.
+Cloze	The Office product has a price of {{c1::$120}}.
+Cloze	The Office product is linked with the company {{c1::Microsoft}}.
+Cloze	The design intentionally avoids {{c1::separate relations}} for many-one relationships.
+Cloze	The primary key of the Product table is {{c1::pname}}.
+Cloze	The foreign key in the Product table is {{c1::cname}}.
+Cloze	The foreign key in the Product table references {{c1::Company(name)}}.
+Cloze	The data type for pname in the Product table is {{c1::VARCHAR(50)}}.
+Cloze	The data type for category in the Product table is {{c1::VARCHAR(60)}}.
+Cloze	The price column in Product uses the data type {{c1::DECIMAL(2, 10)}}.
+Cloze	The Company table includes a column for the company's {{c1::country}}.
+Cloze	A sample product row in Product is {{c1::iPhone 12}}, which is categorized as Electronics.
+Cloze	Participation constraints capture details for {{c1::one entity set}} in a binary relationship.
+Cloze	Binary relationships enforce {{c1::exactly once semantics}} when capturing participation constraints.
+Cloze	In the Product table, the primary key is defined on the column {{c1::pname}}.
+Cloze	The Product table specifies the column {{c1::cname}} as NOT NULL.
+Cloze	The foreign key in the Product table references the {{c1::Company}} table.
+Cloze	The general approach to translating ISA hierarchies uses {{c1::3 relations}}: Employees, Hourly_Emps, and Contract_Emps.
+Cloze	The Employees relation is defined with attributes {{c1::ssn, name, lot}}.
+Cloze	The Hourly_Emps relation includes a foreign key ssnFK along with {{c1::hourly wages}} and hours_worked.
+Cloze	The Contract_Emps relation includes a foreign key ssnFK and the attribute {{c1::contractid}}.
+Cloze	Queries involving only Hourly_Emps require a {{c1::join}} to access additional attributes.
+Cloze	An alternative approach uses just {{c1::Hourly_Emps and Contract_Emps}} relations.
+Cloze	In the alternative design, every employee must belong to {{c1::one of these two subclasses}}.
+Cloze	Translating Aggregation requires treating a {{c1::relationship table}} as an entity.
+Cloze	In aggregation, key constraints are used to combine {{c1::relations}}.
+Cloze	The Monitors table includes foreign keys (pidFK_P, didFK_D, ssnFK_E) and the column {{c1::until}}.
+Cloze	The Sponsor_Monitors table builds on Monitors by incorporating the column {{c1::since}}.
